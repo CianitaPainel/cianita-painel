@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cianita Semijoias · Painel de Consultoras</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;color:#1a1a1a;background:#f5f5f2;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid #e5e5e5;padding:0 1.5rem;display:flex;align-items:center;gap:12px;height:52px;position:sticky;top:0;z-index:100}
+.topbar-logo{font-size:15px;font-weight:600;color:#1a1a1a;margin-right:auto}
+.topbar-logo span{color:#b5906b}
+select,input,textarea,button{font-family:inherit;font-size:13px}
+select{padding:6px 10px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a1a;cursor:pointer}
+.btn{padding:7px 14px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:12px;color:#555;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:#f5f5f2}
+.btn-primary{border-color:#185fa5;background:#e6f1fb;color:#0c447c}
+.btn-primary:hover{background:#d0e6f8}
+.btn-connect{background:#185fa5;color:#fff;border-color:#185fa5;padding:8px 20px;font-size:13px;font-weight:500}
+.btn-connect:hover{background:#0c447c}
+.main{padding:1.5rem}
+.setup-card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:2rem;max-width:520px;margin:2rem auto}
+.setup-title{font-size:18px;font-weight:600;margin-bottom:6px}
+.setup-sub{font-size:13px;color:#666;margin-bottom:1.5rem;line-height:1.6}
+.setup-field{margin-bottom:12px}
+.setup-label{font-size:11px;color:#888;margin-bottom:4px;display:block}
+.setup-input{width:100%;padding:9px 12px;border-radius:8px;border:1px solid #ddd;font-size:13px;color:#1a1a1a}
+.setup-input:focus{outline:none;border-color:#185fa5}
+.status-bar{font-size:12px;margin-top:12px;padding:10px 14px;border-radius:8px;display:none;line-height:1.5}
+.status-loading{background:#e6f1fb;color:#0c447c;display:block}
+.status-error{background:#fcebeb;color:#a32d2d;display:block}
+.status-ok{background:#eaf3de;color:#3b6d11;display:block}
+.toolbar{display:flex;gap:8px;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap}
+.toolbar-title{font-size:15px;font-weight:600;margin-right:auto;color:#1a1a1a}
+.toolbar-title span{font-size:12px;font-weight:400;color:#888;margin-left:6px}
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:start}
+@media(max-width:900px){.kanban{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.kanban{grid-template-columns:1fr}}
+.col{background:#f0ede8;border-radius:12px;padding:12px}
+.col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;padding-bottom:8px;border-bottom:1px solid rgba(0,0,0,0.08)}
+.col-title{font-weight:600;font-size:13px}
+.col-count{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
+.col-hint{font-size:10px;color:#888;margin-bottom:10px;line-height:1.4}
+.card{background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:border-color 0.15s}
+.card:hover{border-color:#aaa}
+.card:last-child{margin-bottom:0}
+.card-name{font-weight:600;font-size:12px;margin-bottom:5px}
+.card-alert{font-size:10px;margin-top:7px;padding:5px 8px;border-left:2px solid;border-radius:0 6px 6px 0}
+.card-alert-warn{background:#faeeda;color:#854f0b;border-color:#ef9f27}
+.card-alert-danger{background:#fcebeb;color:#a32d2d;border-color:#e24b4a}
+.nivel-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px}
+.obs-dot{width:7px;height:7px;border-radius:50%;background:#185fa5;flex-shrink:0}
+.overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:14px;padding:1.5rem;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.modal-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid #eee}
+.avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+textarea{width:100%;padding:9px 12px;border-radius:8px;border:1px solid #ddd;color:#1a1a1a;resize:vertical;min-height:64px;line-height:1.5;font-family:inherit;font-size:13px}
+textarea:focus{outline:none;border-color:#185fa5}
+.obs-item{background:#f5f5f2;border-radius:8px;padding:9px 11px;margin-bottom:6px;font-size:12px;line-height:1.5}
+.obs-item-date{font-size:10px;color:#999;margin-top:3px}
+.btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.info-cell{background:#f5f5f2;border-radius:8px;padding:9px 11px}
+.info-cell-label{font-size:10px;color:#888}
+.info-cell-val{font-size:14px;font-weight:600;margin-top:2px}
+.field-label{font-size:11px;color:#888;margin-bottom:5px;margin-top:14px;display:flex;align-items:center;gap:5px}
+.acao-item{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid #f0f0f0;font-size:12px}
+.acao-item:last-child{border-bottom:none}
+.acao-done{text-decoration:line-through;color:#aaa}
+.investig-box{border-left:3px solid;border-radius:0 8px 8px 0;padding:10px 13px;margin-bottom:12px;font-size:12px;line-height:1.5}
+.investig-warn{border-color:#ef9f27;background:#faeeda;color:#854f0b}
+.investig-danger{border-color:#e24b4a;background:#fcebeb;color:#a32d2d}
+.empty-col{font-size:11px;color:#aaa;text-align:center;padding:16px 0}
+.loading-dots{display:inline-block;font-size:20px;letter-spacing:2px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">Cianita <span>Semijoias</span></div>
+  <div id="topbar-controls" style="display:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+    <select id="filtro-sup" onchange="renderKanban()">
+      <option value="todas">Todas as supervisoras</option>
+    </select>
+    <select id="filtro-nivel" onchange="renderKanban()">
+      <option value="todos">Todos os níveis</option>
+    </select>
+    <button class="btn" onclick="recarregar()"><i class="ti ti-refresh"></i> Atualizar</button>
+    <button class="btn" onclick="sair()"><i class="ti ti-logout"></i> Sair</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <div id="setup-card" class="setup-card">
+    <div class="setup-title">Acessar painel</div>
+    <div class="setup-sub">Use o token gerado em <strong>Configurações → API</strong> dentro do Jueri. Ele fica salvo neste navegador e não é compartilhado com ninguém.</div>
+    <div class="setup-field">
+      <label class="setup-label">Token de API do Jueri</label>
+      <input type="password" class="setup-input" id="token-input" placeholder="Cole seu token aqui..." autocomplete="off">
+    </div>
+    <button class="btn btn-connect" onclick="iniciarCarregamento()"><i class="ti ti-plug"></i> Conectar</button>
+    <div class="status-bar" id="status-bar"></div>
+  </div>
+
+  <div id="painel" style="display:none">
+    <div class="toolbar">
+      <div class="toolbar-title">Kanban de consultoras <span id="mes-label"></span></div>
+    </div>
+    <div class="kanban" id="kanban"></div>
+  </div>
+
+</div>
+
+<div class="overlay" id="overlay" onclick="fecharModal(event)">
+  <div class="modal" id="modal" onclick="event.stopPropagation()"></div>
+</div>
+
+<script>
+const CLIENTE_ID = '8493';
+const PROXY = '/api/jueri/' + CLIENTE_ID;
+const NIVEL_STYLE = {
+  'Bronze':      {bg:'#faece7',color:'#712b13'},
+  'Prata':       {bg:'#f1efe8',color:'#444441'},
+  'Ouro':        {bg:'#faeeda',color:'#633806'},
+  'Diamante':    {bg:'#e6f1fb',color:'#0c447c'},
+  'Embaixadora': {bg:'#eeedfe',color:'#3c3489'}
+};
+const SUP_COLORS = [
+  {bg:'#e1f5ee',color:'#085041'},
+  {bg:'#fbeaf0',color:'#72243e'},
+  {bg:'#faeeda',color:'#633806'},
+  {bg:'#eeedfe',color:'#3c3489'},
+  {bg:'#e6f1fb',color:'#0c447c'},
+];
+const AVATAR_BG  = ['#b5d4f4','#9fe1cb','#f5c4b3','#f4c0d1','#fac775','#c0dd97','#cecbf6','#f0997b'];
+const AVATAR_CLR = ['#0c447c','#085041','#712b13','#72243e','#854f0b','#27500a','#3c3489','#993c1d'];
+const COLUNAS = [
+  {id:'zerada',         label:'Zeradas',           hint:'Mostruário ativo, sem vendas registradas no período.',                            countBg:'#fcebeb',countClr:'#a32d2d'},
+  {id:'abaixo',         label:'Abaixo de R$ 500',  hint:'Abaixo do mínimo — frete e renovação por conta delas.',                          countBg:'#faeeda',countClr:'#854f0b'},
+  {id:'acima',          label:'Acima de R$ 500',   hint:'Operação regular dentro do modelo de consignado.',                               countBg:'#eaf3de',countClr:'#3b6d11'},
+  {id:'sem-mostruario', label:'Sem kit separado',  hint:'Kit não foi bipado e separado — sem mostruário físico. Investigar com supervisora.', countBg:'#f1efe8',countClr:'#5f5e5a'},
+];
+
+let TOKEN = '';
+let consultoras = [];
+let niveis = [];
+let supervisoras = [];
+let supColorMap = {};
+let obsLocal = JSON.parse(localStorage.getItem('cianita_obs') || '{}');
+let acoesLocal = JSON.parse(localStorage.getItem('cianita_acoes') || '{}');
+
+function salvarObs() { localStorage.setItem('cianita_obs', JSON.stringify(obsLocal)); }
+function salvarAcoes() { localStorage.setItem('cianita_acoes', JSON.stringify(acoesLocal)); }
+
+function setStatus(msg, tipo) {
+  const el = document.getElementById('status-bar');
+  el.className = 'status-bar status-' + tipo;
+  el.innerHTML = msg;
+}
+
+async function apiFetch(path, method='GET', body=null) {
+  const opts = {
+    method,
+    headers: { 'Content-Type':'application/json', 'Accept':'application/json', 'x-jueri-token': TOKEN }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(PROXY + path, opts);
+  if (!r.ok) {
+    const err = await r.json().catch(() => ({}));
+    throw new Error(err.message || 'HTTP ' + r.status);
+  }
+  return r.json();
+}
+
+async function buscarTodas(path) {
+  let pagina = 1, todos = [];
+  while (true) {
+    const sep = path.includes('?') ? '&' : '?';
+    const res = await apiFetch(path + sep + 'page=' + pagina + '&per_page=100');
+    const data = res.data || res;
+    if (!Array.isArray(data) || data.length === 0) break;
+    todos = todos.concat(data);
+    if (!res.next_page_url) break;
+    pagina++;
+  }
+  return todos;
+}
+
+async function iniciarCarregamento() {
+  TOKEN = document.getElementById('token-input').value.trim();
+  if (!TOKEN) { setStatus('Cole o token antes de continuar.', 'error'); return; }
+  localStorage.setItem('cianita_token', TOKEN);
+  setStatus('<i class="ti ti-loader"></i> Conectando...', 'loading');
+  try {
+    await apiFetch('/status');
+    setStatus('<i class="ti ti-check"></i> Conectado! Carregando dados...', 'loading');
+    await carregarDados();
+  } catch(e) {
+    setStatus('<i class="ti ti-lock"></i> Token inválido ou sem permissão. Verifique em Configurações → API no Jueri. (' + e.message + ')', 'error');
+  }
+}
+
+async function carregarDados() {
+  try {
+    setStatus('<i class="ti ti-loader"></i> Buscando consultoras...', 'loading');
+    const [revs, nivs] = await Promise.all([
+      buscarTodas('/revendedor?status=1'),
+      apiFetch('/revendedor/nivel')
+    ]);
+
+    niveis = Array.isArray(nivs) ? nivs : [];
+
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dataIni = ano + '-' + mes + '-01';
+    const ultimoDia = new Date(ano, hoje.getMonth() + 1, 0).getDate();
+    const dataFim = ano + '-' + mes + '-' + String(ultimoDia).padStart(2, '0');
+
+    document.getElementById('mes-label').textContent = '· ' + hoje.toLocaleString('pt-BR', {month:'long', year:'numeric'});
+
+    setStatus('<i class="ti ti-loader"></i> Buscando pedidos do mês...', 'loading');
+    const pedidos = await buscarTodas('/pedido?data_criacao_inicial=' + dataIni + '&data_criacao_final=' + dataFim);
+
+    const vendasPorRev = {};
+    const temPedidoPorRev = {};
+    pedidos.forEach(p => {
+      const rid = p.fk_revendedor_id;
+      if (!rid) return;
+      temPedidoPorRev[rid] = true;
+      if (p.fk_status_pedido_id === 2) {
+        vendasPorRev[rid] = (vendasPorRev[rid] || 0) + parseFloat(p.valor_total || 0);
+      }
+    });
+
+    setStatus('<i class="ti ti-loader"></i> Buscando supervisoras...', 'loading');
+    const supIds = [...new Set(revs.map(r => r.fk_revendedor_gerente_id).filter(Boolean))];
+    const supMap = {};
+    await Promise.all(supIds.map(async sid => {
+      try {
+        const s = await apiFetch('/revendedor/' + sid);
+        supMap[sid] = (s.fisico && s.fisico.nome) || s.nome || ('Supervisora #' + sid);
+      } catch(e) { supMap[sid] = 'Supervisora #' + sid; }
+    }));
+
+    supervisoras = [...new Set(Object.values(supMap))].sort();
+    supervisoras.forEach((s, i) => { supColorMap[s] = SUP_COLORS[i % SUP_COLORS.length]; });
+
+    const selSup = document.getElementById('filtro-sup');
+    selSup.innerHTML = '<option value="todas">Todas as supervisoras</option>';
+    supervisoras.forEach(s => {
+      const o = document.createElement('option');
+      o.value = s; o.textContent = s;
+      selSup.appendChild(o);
+    });
+
+    const selNivel = document.getElementById('filtro-nivel');
+    selNivel.innerHTML = '<option value="todos">Todos os níveis</option>';
+    niveis.forEach(n => {
+      const o = document.createElement('option');
+      o.value = n.nome; o.textContent = n.nome;
+      selNivel.appendChild(o);
+    });
+
+    consultoras = revs.map(r => {
+      const nome = (r.fisico && r.fisico.nome) || r.nome || 'Consultora';
+      const supId = r.fk_revendedor_gerente_id;
+      const sup = supId && supMap[supId] ? supMap[supId] : 'Sem supervisora';
+      const vendas = vendasPorRev[r.id] || 0;
+      const temKit = !!temPedidoPorRev[r.id];
+      const nivelObj = niveis.find(n => n.id === r.fk_tipo_revendedor_id);
+      const nivel = nivelObj ? nivelObj.nome : 'Bronze';
+      return { id: r.id, nome, sup, vendas, temKit, nivel, telefone: r.telefone_1 || r.telefone_2 || '' };
+    });
+
+    document.getElementById('setup-card').style.display = 'none';
+    document.getElementById('painel').style.display = 'block';
+    document.getElementById('topbar-controls').style.display = 'flex';
+    setStatus('', 'loading');
+    renderKanban();
+
+  } catch(e) {
+    setStatus('<i class="ti ti-alert-circle"></i> Erro ao carregar: ' + e.message, 'error');
+    document.getElementById('setup-card').style.display = 'block';
+    document.getElementById('painel').style.display = 'none';
+  }
+}
+
+function coluna(c) {
+  if (!c.temKit) return 'sem-mostruario';
+  if (c.vendas === 0) return 'zerada';
+  if (c.vendas < 500) return 'abaixo';
+  return 'acima';
+}
+
+function initials(n) { return n.split(' ').slice(0,2).map(x => x[0] || '').join('').toUpperCase(); }
+function fmtBRL(v) { return 'R$ ' + Math.round(v).toLocaleString('pt-BR'); }
+
+function renderKanban() {
+  const sup = document.getElementById('filtro-sup').value;
+  const niv = document.getElementById('filtro-nivel').value;
+  const filtradas = consultoras.filter(c => (sup === 'todas' || c.sup === sup) && (niv === 'todos' || c.nivel === niv));
+  const kanban = document.getElementById('kanban');
+  kanban.innerHTML = '';
+
+  COLUNAS.forEach(col => {
+    const cards = filtradas.filter(c => coluna(c) === col.id);
+    const colEl = document.createElement('div');
+    colEl.className = 'col';
+    colEl.innerHTML = `
+      <div class="col-header">
+        <span class="col-title">${col.label}</span>
+        <span class="col-count" style="background:${col.countBg};color:${col.countClr}">${cards.length}</span>
+      </div>
+      <div class="col-hint">${col.hint}</div>
+      ${cards.length === 0 ? '<div class="empty-col">Nenhuma consultora</div>' : ''}
+    `;
+    cards.forEach(c => {
+      const bg = AVATAR_BG[c.id % AVATAR_BG.length];
+      const clr = AVATAR_CLR[c.id % AVATAR_CLR.length];
+      const nstyle = NIVEL_STYLE[c.nivel] || {bg:'#f1efe8',color:'#444441'};
+      const sstyle = supColorMap[c.sup] || SUP_COLORS[0];
+      const semKit = col.id === 'sem-mostruario';
+      const vendaSemKit = semKit && c.vendas > 0;
+      const temObs = (obsLocal[c.id] || []).length > 0;
+      const acoesPend = (acoesLocal[c.id] || []).filter(a => !a.done).length;
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      if (semKit) card.style.borderColor = '#ef9f27';
+      card.onclick = () => abrirModal(c.id);
+      card.innerHTML = `
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
+          <div class="avatar" style="width:28px;height:28px;font-size:10px;background:${bg};color:${clr}">${initials(c.nome)}</div>
+          <span class="card-name">${c.nome}</span>
+        </div>
+        <div style="margin-bottom:5px">
+          <span style="background:${sstyle.bg};color:${sstyle.color};padding:1px 6px;border-radius:20px;font-size:10px;font-weight:600">${c.sup}</span>
+        </div>
+        ${semKit && !vendaSemKit ? `<div class="card-alert card-alert-warn"><i class="ti ti-alert-triangle"></i> Kit não bipado — sem mostruário físico</div>` : ''}
+        ${vendaSemKit ? `<div class="card-alert card-alert-danger"><i class="ti ti-alert-circle"></i> Vendas sem kit registrado</div>` : ''}
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:7px">
+          <span class="nivel-badge" style="background:${nstyle.bg};color:${nstyle.color}">${c.nivel}</span>
+          <div style="display:flex;align-items:center;gap:6px">
+            ${temObs ? '<div class="obs-dot"></div>' : ''}
+            ${acoesPend > 0 ? `<span style="font-size:10px;color:#854f0b;font-weight:600">${acoesPend} ação</span>` : ''}
+            <span style="font-size:11px;font-weight:600;color:${c.vendas===0?'#a32d2d':c.vendas<500?'#854f0b':'#3b6d11'}">${fmtBRL(c.vendas)}</span>
+          </div>
+        </div>
+      `;
+      colEl.appendChild(card);
+    });
+    kanban.appendChild(colEl);
+  });
+}
+
+function renderAcoes(id) {
+  const lista = acoesLocal[id] || [];
+  if (lista.length === 0) return '<div style="font-size:11px;color:#aaa;margin-bottom:6px">Nenhuma ação cadastrada.</div>';
+  return lista.map((a, i) => `
+    <div class="acao-item">
+      <input type="checkbox" style="width:15px;height:15px;flex-shrink:0;cursor:pointer" ${a.done ? 'checked' : ''} onchange="toggleAcao(${id},${i},this.checked)">
+      <span class="${a.done ? 'acao-done' : ''}">${a.txt}</span>
+    </div>
+  `).join('');
+}
+
+function abrirModal(id) {
+  const c = consultoras.find(x => x.id === id);
+  if (!c) return;
+  const bg = AVATAR_BG[c.id % AVATAR_BG.length];
+  const clr = AVATAR_CLR[c.id % AVATAR_CLR.length];
+  const nstyle = NIVEL_STYLE[c.nivel] || {bg:'#f1efe8',color:'#444441'};
+  const sstyle = supColorMap[c.sup] || SUP_COLORS[0];
+  const col = coluna(c);
+  const colLabel = COLUNAS.find(x => x.id === col)?.label || '';
+  const semKit = col === 'sem-mostruario';
+  const vendaSemKit = semKit && c.vendas > 0;
+  const obsList = obsLocal[id] || [];
+
+  let alertaKit = '';
+  if (semKit && !vendaSemKit) {
+    alertaKit = `<div class="investig-box investig-warn"><i class="ti ti-alert-triangle"></i> Kit não bipado nem separado pela supervisora. Consultora ativa no cadastro mas sem mostruário físico. Investigar com ${c.sup} o motivo e definir próximo passo: montar o kit ou encerrar o cadastro.</div>`;
+  } else if (vendaSemKit) {
+    alertaKit = `<div class="investig-box investig-danger"><i class="ti ti-alert-circle"></i> Vendas de ${fmtBRL(c.vendas)} sem kit bipado registrado. Verificar urgentemente a origem das peças.</div>`;
+  }
+
+  document.getElementById('modal').innerHTML = `
+    <div class="modal-header">
+      <div class="avatar" style="width:38px;height:38px;font-size:13px;background:${bg};color:${clr}">${initials(c.nome)}</div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:14px">${c.nome}</div>
+        <div style="display:flex;gap:5px;margin-top:4px;flex-wrap:wrap">
+          <span style="background:${sstyle.bg};color:${sstyle.color};padding:1px 7px;border-radius:20px;font-size:10px;font-weight:600">${c.sup}</span>
+          <span class="nivel-badge" style="background:${nstyle.bg};color:${nstyle.color}">${c.nivel}</span>
+          <span style="font-size:10px;color:#888">${colLabel}</span>
+        </div>
+      </div>
+      <button class="btn" onclick="fecharModal()" style="padding:5px 8px" aria-label="Fechar"><i class="ti ti-x"></i></button>
+    </div>
+    ${alertaKit}
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="info-cell-label">Vendas do mês</div>
+        <div class="info-cell-val" style="color:${c.vendas===0?'#a32d2d':c.vendas<500?'#854f0b':'#3b6d11'}">${fmtBRL(c.vendas)}</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-cell-label">Kit bipado</div>
+        <div class="info-cell-val" style="color:${c.temKit?'#3b6d11':'#a32d2d'}">${c.temKit ? 'Sim' : 'Não'}</div>
+      </div>
+      ${c.telefone ? `<div class="info-cell" style="grid-column:1/-1"><div class="info-cell-label">Telefone</div><div class="info-cell-val">${c.telefone}</div></div>` : ''}
+    </div>
+    <div class="field-label"><i class="ti ti-notes" style="font-size:13px"></i> Observações de contato</div>
+    <div id="obs-list-${id}">
+      ${obsList.length === 0
+        ? '<div style="font-size:11px;color:#aaa;margin-bottom:6px">Nenhuma observação ainda.</div>'
+        : obsList.map(o => `<div class="obs-item">${o.txt}<div class="obs-item-date">${o.data}</div></div>`).join('')}
+    </div>
+    <textarea id="nova-obs" placeholder="Registrar nova observação de contato..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="adicionarObs(${id})"><i class="ti ti-check"></i> Salvar observação</button>
+    </div>
+    <div class="field-label" style="margin-top:16px"><i class="ti ti-checkbox" style="font-size:13px"></i> Ações atribuídas</div>
+    <div id="acoes-list-${id}">${renderAcoes(id)}</div>
+    <textarea id="nova-acao" placeholder="Adicionar nova ação..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="adicionarAcao(${id})"><i class="ti ti-plus"></i> Adicionar ação</button>
+    </div>
+  `;
+  document.getElementById('overlay').classList.add('open');
+}
+
+function toggleAcao(id, idx, val) {
+  if (!acoesLocal[id]) acoesLocal[id] = [];
+  acoesLocal[id][idx].done = val;
+  salvarAcoes();
+  document.getElementById('acoes-list-' + id).innerHTML = renderAcoes(id);
+  renderKanban();
+}
+
+function adicionarObs(id) {
+  const txt = document.getElementById('nova-obs').value.trim();
+  if (!txt) return;
+  if (!obsLocal[id]) obsLocal[id] = [];
+  const hoje = new Date();
+  const data = String(hoje.getDate()).padStart(2,'0') + '/' + String(hoje.getMonth()+1).padStart(2,'0') + '/' + hoje.getFullYear();
+  obsLocal[id].push({txt, data});
+  salvarObs();
+  document.getElementById('nova-obs').value = '';
+  document.getElementById('obs-list-' + id).innerHTML = obsLocal[id].map(o => `<div class="obs-item">${o.txt}<div class="obs-item-date">${o.data}</div></div>`).join('');
+  renderKanban();
+}
+
+function adicionarAcao(id) {
+  const txt = document.getElementById('nova-acao').value.trim();
+  if (!txt) return;
+  if (!acoesLocal[id]) acoesLocal[id] = [];
+  acoesLocal[id].push({txt, done:false});
+  salvarAcoes();
+  document.getElementById('nova-acao').value = '';
+  document.getElementById('acoes-list-' + id).innerHTML = renderAcoes(id);
+  renderKanban();
+}
+
+function fecharModal(e) {
+  if (!e || e.target === document.getElementById('overlay')) {
+    document.getElementById('overlay').classList.remove('open');
+  }
+}
+
+function recarregar() {
+  consultoras = [];
+  document.getElementById('kanban').innerHTML = '';
+  carregarDados();
+}
+
+function sair() {
+  localStorage.removeItem('cianita_token');
+  TOKEN = '';
+  consultoras = [];
+  document.getElementById('painel').style.display = 'none';
+  document.getElementById('topbar-controls').style.display = 'none';
+  document.getElementById('setup-card').style.display = 'block';
+  document.getElementById('token-input').value = '';
+  document.getElementById('status-bar').className = 'status-bar';
+}
+
+const savedToken = localStorage.getItem('cianita_token');
+if (savedToken) {
+  document.getElementById('token-input').value = savedToken;
+  TOKEN = savedToken;
+  document.getElementById('setup-card').style.display = 'block';
+}
+</script>
+</body>
+</html>
