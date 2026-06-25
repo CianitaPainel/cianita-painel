@@ -15,7 +15,7 @@ app.use('/api/jueri/:clienteId/*', async (req, res) => {
   const token = req.headers['x-jueri-token'];
 
   if (!token) {
-    return res.status(401).json({ error: 'Token não informado' });
+    return res.status(401).json({ error: 'Token nao informado' });
   }
 
   const url = `${JUERI_BASE}/${clienteId}/${subpath}`;
@@ -35,8 +35,8 @@ app.use('/api/jueri/:clienteId/*', async (req, res) => {
     });
     res.status(response.status).json(response.data);
   } catch (err) {
-    const status = err.response?.status || 500;
-    const data = err.response?.data || { error: err.message };
+    const status = err.response ? err.response.status : 500;
+    const data = err.response ? err.response.data : { error: err.message };
     res.status(status).json(data);
   }
 });
@@ -46,5 +46,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Cianita Painel rodando na porta ${PORT}`);
+  console.log('Cianita Painel rodando na porta ' + PORT);
 });
