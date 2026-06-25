@@ -8,27 +8,41 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;font-size:13px;color:#1a1a1a;background:#fdf6f4;min-height:100vh}
-.topbar{background:#fff;border-bottom:1px solid #f0e4df;padding:0 1.5rem;display:flex;align-items:center;gap:10px;height:56px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(181,144,107,0.06);flex-wrap:wrap}
-.topbar-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;letter-spacing:2px;color:#1a1a1a;text-transform:uppercase;white-space:nowrap}
-.topbar-logo span{font-weight:400;font-size:11px;letter-spacing:3px;color:#b5906b;display:block;line-height:1;font-family:'Inter',sans-serif;text-transform:uppercase}
+body{font-family:'Inter',sans-serif;font-size:13px;color:#1a1a1a;background:#fdf6f4;min-height:100vh;display:flex}
+
+/* SIDEBAR */
+.sidebar{width:200px;min-height:100vh;background:#fff;border-right:1px solid #f0e4df;display:flex;flex-direction:column;padding:1.5rem 0;position:sticky;top:0;height:100vh;flex-shrink:0}
+.sidebar-logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:0 1.25rem 1.5rem;border-bottom:1px solid #f0e4df;margin-bottom:1rem}
+.sidebar-logo span{font-size:10px;letter-spacing:3px;color:#b5906b;display:block;font-family:'Inter',sans-serif;font-weight:400;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 1.25rem;cursor:pointer;font-size:13px;color:#888;border-radius:0;transition:all 0.15s;border-left:3px solid transparent}
+.nav-item:hover{color:#1a1a1a;background:#fdf6f4}
+.nav-item.active{color:#b5906b;background:#fdf0e8;border-left-color:#b5906b;font-weight:500}
+.nav-item i{font-size:16px}
+
+/* MAIN */
+.main-wrap{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{background:#fff;border-bottom:1px solid #f0e4df;padding:0 1.5rem;display:flex;align-items:center;gap:10px;height:52px;position:sticky;top:0;z-index:100;flex-wrap:wrap}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-left:auto}
 select,input,textarea,button{font-family:'Inter',sans-serif;font-size:13px}
 select{padding:6px 10px;border-radius:8px;border:1px solid #e8d8d0;background:#fff;color:#1a1a1a;cursor:pointer}
-.search-input{padding:6px 10px 6px 30px;border-radius:8px;border:1px solid #e8d8d0;background:#fff;color:#1a1a1a;width:180px}
+.search-input{padding:6px 10px 6px 30px;border-radius:8px;border:1px solid #e8d8d0;background:#fff;color:#1a1a1a;width:160px}
 .search-input:focus{outline:none;border-color:#b5906b}
 .search-wrap{position:relative;display:flex;align-items:center}
 .search-wrap i{position:absolute;left:8px;color:#b5906b;font-size:14px}
-.btn{padding:7px 14px;border-radius:8px;border:1px solid #e8d8d0;background:#fff;cursor:pointer;font-size:12px;color:#666;display:inline-flex;align-items:center;gap:5px}
+.btn{padding:6px 12px;border-radius:8px;border:1px solid #e8d8d0;background:#fff;cursor:pointer;font-size:12px;color:#666;display:inline-flex;align-items:center;gap:5px}
 .btn:hover{background:#fdf6f4}
 .btn-primary{border-color:#b5906b;background:#fdf0e8;color:#7a5c3a}
 .btn-connect{background:#1a1a1a;color:#fff;border-color:#1a1a1a;padding:9px 24px;font-size:13px;font-weight:500;border-radius:8px}
 .btn-connect:hover{background:#333}
 .btn-sup{border-color:#b5906b;background:#fff;color:#b5906b;font-size:12px;padding:5px 10px}
-.btn-sup:hover{background:#fdf0e8}
-.main{padding:1.5rem}
-.setup-wrap{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 56px)}
-.setup-card{background:#fff;border:1px solid #f0e4df;border-radius:16px;padding:2.5rem;width:100%;max-width:460px;box-shadow:0 4px 24px rgba(181,144,107,0.08)}
-.setup-logo{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;letter-spacing:3px;text-align:center;margin-bottom:4px;text-transform:uppercase}
+
+.page{display:none;padding:1.5rem;flex:1}
+.page.active{display:block}
+
+/* SETUP */
+.setup-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#fdf6f4}
+.setup-card{background:#fff;border:1px solid #f0e4df;border-radius:16px;padding:2.5rem;width:100%;max-width:420px;box-shadow:0 4px 24px rgba(181,144,107,0.08)}
+.setup-logo{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;letter-spacing:3px;text-align:center;margin-bottom:4px;text-transform:uppercase}
 .setup-sub-logo{font-size:11px;letter-spacing:4px;color:#b5906b;text-align:center;margin-bottom:2rem;text-transform:uppercase}
 .setup-label{font-size:11px;color:#999;margin-bottom:5px;display:block;letter-spacing:0.5px;text-transform:uppercase}
 .setup-input{width:100%;padding:10px 14px;border-radius:8px;border:1px solid #e8d8d0;font-size:13px;color:#1a1a1a;background:#fdf9f7}
@@ -37,12 +51,14 @@ select{padding:6px 10px;border-radius:8px;border:1px solid #e8d8d0;background:#f
 .status-bar{font-size:12px;margin-top:12px;padding:10px 14px;border-radius:8px;display:none;line-height:1.5}
 .status-loading{background:#fdf0e8;color:#7a5c3a;display:block}
 .status-error{background:#fcebeb;color:#a32d2d;display:block}
+
+/* KANBAN */
 .toolbar{display:flex;gap:8px;align-items:center;margin-bottom:1rem;flex-wrap:wrap}
-.toolbar-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;letter-spacing:1px;margin-right:auto;color:#1a1a1a;white-space:nowrap}
+.toolbar-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;letter-spacing:1px;color:#1a1a1a;white-space:nowrap}
 .toolbar-title span{font-size:12px;font-weight:400;color:#b5906b;margin-left:8px;font-family:'Inter',sans-serif}
 .kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:start}
-@media(max-width:900px){.kanban{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.kanban{grid-template-columns:1fr}}
+@media(max-width:1100px){.kanban{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.kanban{grid-template-columns:1fr}}
 .col{background:#f9f1ee;border-radius:14px;padding:12px}
 .col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;padding-bottom:8px;border-bottom:1px solid rgba(181,144,107,0.15)}
 .col-title{font-weight:600;font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:#888}
@@ -60,6 +76,31 @@ select{padding:6px 10px;border-radius:8px;border:1px solid #e8d8d0;background:#f
 .acerto-chip{font-size:10px;color:#7a5c3a;background:#fdf0e8;padding:2px 6px;border-radius:20px;display:inline-flex;align-items:center;gap:3px}
 .acerto-chip.vencido{color:#a32d2d;background:#fcebeb}
 .acerto-chip.hoje{color:#3b6d11;background:#eaf3de}
+.empty-col{font-size:11px;color:#c9a898;text-align:center;padding:16px 0}
+
+/* DASHBOARD */
+.dash-tabs{display:flex;gap:4px;margin-bottom:1.5rem;background:#f9f1ee;border-radius:12px;padding:4px}
+.dash-tab{padding:8px 16px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:500;color:#888;border:none;background:transparent;flex:1;text-align:center}
+.dash-tab.active{background:#fff;color:#b5906b;box-shadow:0 1px 4px rgba(181,144,107,0.15)}
+.dash-section{display:none}
+.dash-section.active{display:block}
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:1.5rem}
+.dash-card{background:#fff;border:1px solid #f0e4df;border-radius:14px;padding:1.25rem}
+.dash-card-label{font-size:11px;color:#b5906b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.dash-card-name{font-size:13px;font-weight:600;margin-bottom:8px;color:#1a1a1a}
+.dash-card-value{font-size:24px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
+.dash-card-sub{font-size:11px;color:#999}
+.dash-card.destaque{border-color:#b5906b;background:linear-gradient(135deg,#fdf0e8,#fff)}
+.dash-table{background:#fff;border:1px solid #f0e4df;border-radius:14px;overflow:hidden}
+.dash-table table{width:100%;border-collapse:collapse}
+.dash-table th{text-align:left;padding:10px 14px;font-size:11px;font-weight:600;color:#b5906b;text-transform:uppercase;letter-spacing:0.5px;background:#fdf6f4;border-bottom:1px solid #f0e4df}
+.dash-table td{padding:10px 14px;border-bottom:1px solid #f5ede9;font-size:12px}
+.dash-table tr:last-child td{border-bottom:none}
+.dash-table tr:hover td{background:#fdf9f7}
+.dash-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;margin-bottom:1.25rem;color:#1a1a1a}
+.dash-sub{font-size:12px;color:#999;margin-bottom:1.25rem}
+
+/* MODAL */
 .overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.35);z-index:200;align-items:center;justify-content:center;padding:1rem}
 .overlay.open{display:flex}
 .modal{background:#fff;border-radius:16px;padding:1.5rem;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,0.15)}
@@ -81,10 +122,6 @@ textarea:focus{outline:none;border-color:#b5906b}
 .investig-box{border-left:3px solid;border-radius:0 8px 8px 0;padding:10px 13px;margin-bottom:12px;font-size:12px;line-height:1.5}
 .investig-warn{border-color:#ef9f27;background:#faeeda;color:#854f0b}
 .investig-danger{border-color:#e24b4a;background:#fcebeb;color:#a32d2d}
-.empty-col{font-size:11px;color:#c9a898;text-align:center;padding:16px 0}
-.topbar-controls{display:none;align-items:center;gap:8px;flex-wrap:wrap}
-
-/* Modal supervisoras */
 .sup-modal{background:#fff;border-radius:16px;padding:1.5rem;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,0.15)}
 .sup-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;margin-bottom:4px}
 .sup-sub{font-size:12px;color:#999;margin-bottom:1rem;line-height:1.5}
@@ -98,59 +135,114 @@ textarea:focus{outline:none;border-color:#b5906b}
 </head>
 <body>
 
-<div class="topbar">
-  <div class="topbar-logo">Cianita<span>Semijoias</span></div>
-  <div class="topbar-controls" id="topbar-controls">
-    <div class="search-wrap">
-      <i class="ti ti-search"></i>
-      <input type="text" class="search-input" id="busca-nome" placeholder="Buscar consultora..." oninput="renderKanban()">
+<!-- SETUP (fora do layout normal) -->
+<div id="setup-wrap" style="display:flex;position:fixed;top:0;left:0;right:0;bottom:0;z-index:999;align-items:center;justify-content:center;background:#fdf6f4">
+  <div class="setup-card">
+    <div class="setup-logo">Cianita</div>
+    <div class="setup-sub-logo">Semijoias · Painel</div>
+    <div class="setup-field">
+      <label class="setup-label">Token de API do Jueri</label>
+      <input type="password" class="setup-input" id="token-input" placeholder="Cole seu token aqui..." autocomplete="off">
     </div>
-    <select id="filtro-sup" onchange="renderKanban()">
-      <option value="todas">Todas as supervisoras</option>
-      <option value="sem">Sem supervisora</option>
-    </select>
-    <select id="filtro-nivel" onchange="renderKanban()">
-      <option value="todos">Todos os níveis</option>
-    </select>
-    <select id="filtro-contato" onchange="renderKanban()">
-      <option value="todos">Todos os contatos</option>
-      <option value="com">Com contato no mês</option>
-      <option value="sem">Sem contato no mês</option>
-    </select>
-    <button class="btn btn-sup" onclick="abrirModalSupervisoras()"><i class="ti ti-users"></i> Supervisoras</button>
-    <button class="btn" onclick="recarregar()"><i class="ti ti-refresh"></i> Atualizar</button>
-    <button class="btn" onclick="sair()"><i class="ti ti-logout"></i> Sair</button>
+    <button class="btn btn-connect" onclick="iniciarCarregamento()"><i class="ti ti-plug"></i> Conectar</button>
+    <div class="status-bar" id="status-bar"></div>
   </div>
 </div>
 
-<div class="main">
-  <div id="setup-wrap" class="setup-wrap">
-    <div class="setup-card">
-      <div class="setup-logo">Cianita</div>
-      <div class="setup-sub-logo">Semijoias · Painel</div>
-      <div class="setup-field">
-        <label class="setup-label">Token de API do Jueri</label>
-        <input type="password" class="setup-input" id="token-input" placeholder="Cole seu token aqui..." autocomplete="off">
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar" style="display:none">
+  <div class="sidebar-logo">Cianita<span>Semijoias</span></div>
+  <div class="nav-item active" onclick="navegar('revenda')" id="nav-revenda">
+    <i class="ti ti-layout-kanban"></i> Revenda
+  </div>
+  <div class="nav-item" onclick="navegar('dashboard')" id="nav-dashboard">
+    <i class="ti ti-chart-bar"></i> Dashboard
+  </div>
+  <div style="margin-top:auto;padding:1rem 1.25rem;border-top:1px solid #f0e4df">
+    <div class="nav-item" onclick="sair()" style="padding:8px 0;border-left:none">
+      <i class="ti ti-logout"></i> Sair
+    </div>
+  </div>
+</div>
+
+<!-- MAIN WRAP -->
+<div class="main-wrap" id="main-wrap" style="display:none">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div id="topbar-revenda" class="topbar-right" style="width:100%">
+      <div class="search-wrap">
+        <i class="ti ti-search"></i>
+        <input type="text" class="search-input" id="busca-nome" placeholder="Buscar consultora..." oninput="renderKanban()">
       </div>
-      <button class="btn btn-connect" onclick="iniciarCarregamento()"><i class="ti ti-plug"></i> Conectar</button>
-      <div class="status-bar" id="status-bar"></div>
+      <select id="filtro-sup" onchange="renderKanban()">
+        <option value="todas">Todas as supervisoras</option>
+        <option value="sem">Sem supervisora</option>
+      </select>
+      <select id="filtro-nivel" onchange="renderKanban()">
+        <option value="todos">Todos os níveis</option>
+      </select>
+      <select id="filtro-contato" onchange="renderKanban()">
+        <option value="todos">Todos os contatos</option>
+        <option value="com">Com contato no mês</option>
+        <option value="sem">Sem contato no mês</option>
+      </select>
+      <button class="btn btn-sup" onclick="abrirModalSupervisoras()"><i class="ti ti-users"></i> Supervisoras</button>
+      <button class="btn" onclick="recarregar()"><i class="ti ti-refresh"></i> Atualizar</button>
+    </div>
+    <div id="topbar-dashboard" class="topbar-right" style="display:none;width:100%">
+      <button class="btn" onclick="recarregarDash()"><i class="ti ti-refresh"></i> Atualizar</button>
     </div>
   </div>
 
-  <div id="painel" style="display:none">
+  <!-- PAGE: REVENDA -->
+  <div class="page active" id="page-revenda">
     <div class="toolbar">
-      <div class="toolbar-title">Consultoras <span id="mes-label"></span></div>
+      <div class="toolbar-title">Revenda <span id="mes-label"></span></div>
     </div>
     <div class="kanban" id="kanban"></div>
   </div>
+
+  <!-- PAGE: DASHBOARD -->
+  <div class="page" id="page-dashboard">
+    <div class="toolbar">
+      <div class="toolbar-title">Dashboard <span id="mes-label-dash"></span></div>
+    </div>
+
+    <div class="dash-tabs">
+      <button class="dash-tab active" onclick="trocarDash('prebaixa', this)"><i class="ti ti-clock"></i> Pré-baixa</button>
+      <button class="dash-tab" onclick="trocarDash('vendas', this)"><i class="ti ti-receipt"></i> Vendas</button>
+      <button class="dash-tab" onclick="trocarDash('consolidado', this)"><i class="ti ti-chart-pie"></i> Consolidado</button>
+    </div>
+
+    <!-- PRÉ-BAIXA -->
+    <div class="dash-section active" id="dash-prebaixa">
+      <div class="dash-sub">Pedidos em aberto com data de acerto no mês atual — exclui acertos para meses futuros.</div>
+      <div class="dash-grid" id="grid-prebaixa"></div>
+      <div class="dash-table"><table><thead><tr><th>Consultora</th><th>Supervisora</th><th>Acerto</th><th style="text-align:right">Pré-baixa</th></tr></thead><tbody id="tbody-prebaixa"></tbody></table></div>
+    </div>
+
+    <!-- VENDAS -->
+    <div class="dash-section" id="dash-vendas">
+      <div class="dash-sub">Vendas concluídas no mês — pedidos baixados das consultoras + vendas da loja física.</div>
+      <div class="dash-grid" id="grid-vendas"></div>
+      <div class="dash-table"><table><thead><tr><th>Comprador / Origem</th><th>Vendedor</th><th>Data</th><th style="text-align:right">Valor</th></tr></thead><tbody id="tbody-vendas"></tbody></table></div>
+    </div>
+
+    <!-- CONSOLIDADO -->
+    <div class="dash-section" id="dash-consolidado">
+      <div class="dash-sub">Visão completa do mês: pré-baixa + vendas por supervisora e total geral.</div>
+      <div class="dash-grid" id="grid-consolidado"></div>
+      <div class="dash-table"><table><thead><tr><th>Supervisora</th><th style="text-align:right">Pré-baixa</th><th style="text-align:right">Vendas</th><th style="text-align:right">Total</th></tr></thead><tbody id="tbody-consolidado"></tbody></table></div>
+    </div>
+  </div>
+
 </div>
 
-<!-- Overlay consultora -->
+<!-- OVERLAYS -->
 <div class="overlay" id="overlay" onclick="fecharModal(event)">
   <div class="modal" id="modal" onclick="event.stopPropagation()"></div>
 </div>
-
-<!-- Overlay supervisoras -->
 <div class="overlay" id="overlay-sup" onclick="fecharModalSup(event)">
   <div class="sup-modal" id="modal-sup" onclick="event.stopPropagation()"></div>
 </div>
@@ -158,6 +250,13 @@ textarea:focus{outline:none;border-color:#b5906b}
 <script>
 const CLIENTE_ID = '8493';
 const PROXY = '/api/jueri/' + CLIENTE_ID;
+
+const SUPERVISORAS = [
+  {nome:'Maria Fernanda', jueri:'Maria Fernanda'},
+  {nome:'Cinthia',        jueri:'Cinthia Caroline'},
+  {nome:'Gabrielly',      jueri:'Gabrielly Lacerda'},
+];
+const DEBORA_JUERI = 'Débora Lorrane';
 
 const NIVEL_STYLE = {
   'BRONZE':      {bg:'#faece7',color:'#712b13'},
@@ -170,8 +269,6 @@ const SUP_COLORS = [
   {bg:'#e1f5ee',color:'#085041'},
   {bg:'#fbeaf0',color:'#72243e'},
   {bg:'#faeeda',color:'#633806'},
-  {bg:'#eeedfe',color:'#3c3489'},
-  {bg:'#e6f1fb',color:'#0c447c'},
 ];
 const AVATAR_BG  = ['#f5d5c8','#f4c0d1','#fac775','#c0dd97','#b5d4f4','#cecbf6','#9fe1cb','#f0997b'];
 const AVATAR_CLR = ['#7a2e1a','#72243e','#633806','#27500a','#0c447c','#3c3489','#085041','#993c1d'];
@@ -182,15 +279,15 @@ const COLUNAS = [
   {id:'sem-mostruario', label:'Sem kit separado',  hint:'Kit não bipado — investigar com supervisora.', countBg:'#f5ede9',countClr:'#7a5c3a'},
 ];
 
-const SUPERVISORAS_FIXAS = ['Maria Fernanda', 'Cinthia', 'Gabrielly'];
-
 let TOKEN = '';
 let consultoras = [];
 let supColorMap = {};
+let dashData = null;
 let obsLocal = JSON.parse(localStorage.getItem('cianita_obs') || '{}');
 let acoesLocal = JSON.parse(localStorage.getItem('cianita_acoes') || '{}');
-// Mapa manual de supervisoras: { consultora_id: 'Nome Supervisora' }
 let supManual = JSON.parse(localStorage.getItem('cianita_sup') || '{}');
+
+SUPERVISORAS.forEach((s,i) => { supColorMap[s.nome] = SUP_COLORS[i % SUP_COLORS.length]; });
 
 function salvarObsStorage() { localStorage.setItem('cianita_obs', JSON.stringify(obsLocal)); }
 function salvarAcoesStorage() { localStorage.setItem('cianita_acoes', JSON.stringify(acoesLocal)); }
@@ -227,6 +324,18 @@ async function buscarTodas(path) {
   return todos;
 }
 
+function getMesAtual() {
+  const hoje = new Date();
+  return { ano: hoje.getFullYear(), mes: hoje.getMonth() };
+}
+
+function dataNoMesAtual(dataStr) {
+  if (!dataStr) return false;
+  const d = new Date(dataStr);
+  const { ano, mes } = getMesAtual();
+  return d.getFullYear() === ano && d.getMonth() === mes;
+}
+
 async function iniciarCarregamento() {
   TOKEN = document.getElementById('token-input').value.trim();
   if (!TOKEN) { setStatus('Cole o token antes de continuar.', 'error'); return; }
@@ -252,15 +361,18 @@ async function carregarDados() {
     const dataIni = ano + '-' + mes + '-01';
     const ultimoDia = new Date(ano, hoje.getMonth() + 1, 0).getDate();
     const dataFim = ano + '-' + mes + '-' + String(ultimoDia).padStart(2, '0');
-    document.getElementById('mes-label').textContent = '· ' + hoje.toLocaleString('pt-BR', {month:'long', year:'numeric'});
+    const mesLabel = '· ' + hoje.toLocaleString('pt-BR', {month:'long', year:'numeric'});
+    document.getElementById('mes-label').textContent = mesLabel;
+    document.getElementById('mes-label-dash').textContent = mesLabel;
 
-    setStatus('<i class="ti ti-loader"></i> Buscando pedidos...', 'loading');
-    const [pedidosAbertos, pedidosMes] = await Promise.all([
+    setStatus('<i class="ti ti-loader"></i> Buscando pedidos e vendas...', 'loading');
+    const [pedidosAbertos, pedidosMes, vendasMes] = await Promise.all([
       buscarTodas('/pedido?status=1'),
-      buscarTodas('/pedido?data_criacao_inicial=' + dataIni + '&data_criacao_final=' + dataFim)
+      buscarTodas('/pedido?data_criacao_inicial=' + dataIni + '&data_criacao_final=' + dataFim),
+      buscarTodas('/venda?data_criacao_inicial=' + dataIni + '&data_criacao_final=' + dataFim)
     ]);
 
-    // Kit bipado + data de acerto
+    // Kit bipado + data acerto
     const temKitAberto = {};
     const dataAcertoPorRev = {};
     pedidosAbertos.forEach(p => {
@@ -269,7 +381,18 @@ async function carregarDados() {
       if (p.data_acerto) dataAcertoPorRev[p.fk_revendedor_id] = p.data_acerto;
     });
 
-    // Vendas do mês
+    // Vendas compras diretas por consultora (em /venda)
+    const comprasDiretasPorRev = {};
+    vendasMes.forEach(v => {
+      if (!v.comprador) return;
+      const nomeComprador = v.comprador.nome || '';
+      const c = apenasConsultoras.find(r => r.nome === nomeComprador);
+      if (c) {
+        comprasDiretasPorRev[c.id] = (comprasDiretasPorRev[c.id] || 0) + parseFloat(v.valor_total || 0);
+      }
+    });
+
+    // Vendas pré-baixa dos pedidos do mês
     const vendasPorRev = {};
     pedidosMes.forEach(p => {
       const rid = p.fk_revendedor_id;
@@ -283,14 +406,13 @@ async function carregarDados() {
       }
     });
 
-    // Popula supervisoras no filtro
+    // Popula filtros
     const selSup = document.getElementById('filtro-sup');
     selSup.innerHTML = '<option value="todas">Todas as supervisoras</option><option value="sem">Sem supervisora</option>';
-    SUPERVISORAS_FIXAS.forEach(s => {
+    SUPERVISORAS.forEach(s => {
       const o = document.createElement('option');
-      o.value = s; o.textContent = s;
+      o.value = s.nome; o.textContent = s.nome;
       selSup.appendChild(o);
-      supColorMap[s] = SUP_COLORS[SUPERVISORAS_FIXAS.indexOf(s) % SUP_COLORS.length];
     });
 
     const selNivel = document.getElementById('filtro-nivel');
@@ -301,64 +423,84 @@ async function carregarDados() {
       selNivel.appendChild(o);
     });
 
-    // Monta consultoras
     consultoras = apenasConsultoras.map(r => {
       const nome = r.nome || 'Consultora';
       const sup = supManual[r.id] || 'Sem supervisora';
       const vendas = vendasPorRev[r.id] || 0;
+      const comprasDiretas = comprasDiretasPorRev[r.id] || 0;
       const temKit = !!temKitAberto[r.id];
       const nivel = (r.level_revendedor || 'BRONZE').toUpperCase();
       const dataAcerto = dataAcertoPorRev[r.id] || null;
-      return { id: r.id, nome, sup, vendas, temKit, nivel, telefone: r.telefone_1 || r.telefone_2 || '', dataAcerto };
+      return { id: r.id, nome, sup, vendas, comprasDiretas, temKit, nivel, telefone: r.telefone_1 || r.telefone_2 || '', dataAcerto };
     });
 
+    // Dados para dashboard
+    dashData = { pedidosAbertos, pedidosMes, vendasMes, apenasConsultoras };
+
     document.getElementById('setup-wrap').style.display = 'none';
-    document.getElementById('painel').style.display = 'block';
-    document.getElementById('topbar-controls').style.display = 'flex';
+    document.getElementById('sidebar').style.display = 'flex';
+    document.getElementById('main-wrap').style.display = 'flex';
     setStatus('', 'loading');
     renderKanban();
+    renderDashboard();
 
   } catch(e) {
     setStatus('<i class="ti ti-alert-circle"></i> Erro: ' + e.message, 'error');
   }
 }
 
+// NAVEGAÇÃO
+function navegar(pagina) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + pagina).classList.add('active');
+  document.getElementById('nav-' + pagina).classList.add('active');
+  document.getElementById('topbar-revenda').style.display = pagina === 'revenda' ? 'flex' : 'none';
+  document.getElementById('topbar-dashboard').style.display = pagina === 'dashboard' ? 'flex' : 'none';
+}
+
+function trocarDash(id, btn) {
+  document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('dash-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// KANBAN
 function coluna(c) {
   if (!c.temKit) return 'sem-mostruario';
   if (c.vendas === 0) return 'zerada';
   if (c.vendas < 500) return 'abaixo';
   return 'acima';
 }
-
 function initials(n) { return n.split(' ').slice(0,2).map(x => x[0] || '').join('').toUpperCase(); }
-function fmtBRL(v) { return 'R$ ' + Math.round(v).toLocaleString('pt-BR'); }
+function fmtBRL(v) { return 'R$ ' + parseFloat(v).toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtData(s) {
+  if (!s) return '—';
+  const d = new Date(s);
+  return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0');
+}
 
 function fmtAcerto(dataStr) {
   if (!dataStr) return null;
   const d = new Date(dataStr);
   if (isNaN(d)) return null;
-  const hoje = new Date();
-  hoje.setHours(0,0,0,0);
-  d.setHours(0,0,0,0);
+  const hoje = new Date(); hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
   const diff = Math.round((d - hoje) / (1000*60*60*24));
   const label = String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0');
-  if (diff < 0) return {label, cls:'vencido', tip:'Acerto vencido'};
-  if (diff === 0) return {label, cls:'hoje', tip:'Acerto hoje'};
-  return {label, cls:'', tip:'Acerto em ' + diff + ' dias'};
+  if (diff < 0) return {label, cls:'vencido'};
+  if (diff === 0) return {label, cls:'hoje'};
+  return {label, cls:''};
 }
 
 function temContatoMes(id) {
   const obs = obsLocal[id] || [];
   const hoje = new Date();
-  const mesAtual = hoje.getMonth();
-  const anoAtual = hoje.getFullYear();
   return obs.some(o => {
     if (!o.data) return false;
-    const partes = o.data.split('/');
-    if (partes.length < 3) return false;
-    const m = parseInt(partes[1]) - 1;
-    const a = parseInt(partes[2]);
-    return m === mesAtual && a === anoAtual;
+    const p = o.data.split('/');
+    if (p.length < 3) return false;
+    return parseInt(p[1])-1 === hoje.getMonth() && parseInt(p[2]) === hoje.getFullYear();
   });
 }
 
@@ -416,17 +558,20 @@ function renderKanban() {
         </div>
         <div style="margin-bottom:5px;display:flex;align-items:center;gap:5px;flex-wrap:wrap">
           <span style="background:${sstyle.bg};color:${sstyle.color};padding:1px 6px;border-radius:20px;font-size:10px;font-weight:600">${c.sup}</span>
-          ${acerto ? `<span class="acerto-chip ${acerto.cls}" title="${acerto.tip}"><i class="ti ti-calendar" style="font-size:9px"></i>${acerto.label}</span>` : ''}
+          ${acerto ? `<span class="acerto-chip ${acerto.cls}"><i class="ti ti-calendar" style="font-size:9px"></i>${acerto.label}</span>` : ''}
         </div>
         ${semKit && !vendaSemKit ? `<div class="card-alert card-alert-warn"><i class="ti ti-alert-triangle"></i> Kit não bipado</div>` : ''}
         ${vendaSemKit ? `<div class="card-alert card-alert-danger"><i class="ti ti-alert-circle"></i> Vendas sem kit registrado</div>` : ''}
         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:7px">
           <span class="nivel-badge" style="background:${nstyle.bg};color:${nstyle.color}">${c.nivel.charAt(0)+c.nivel.slice(1).toLowerCase()}</span>
-          <div style="display:flex;align-items:center;gap:5px">
-            ${comContato ? `<span title="Contato registrado este mês" style="font-size:10px;color:#3b6d11">✓</span>` : ''}
-            ${temObs && !comContato ? '<div class="obs-dot"></div>' : ''}
-            ${acoesPend > 0 ? `<span style="font-size:10px;color:#854f0b;font-weight:600">${acoesPend} ação</span>` : ''}
-            <span style="font-size:11px;font-weight:600;color:${c.vendas===0?'#a32d2d':c.vendas<500?'#854f0b':'#3b6d11'}">${fmtBRL(c.vendas)}</span>
+          <div style="display:flex;align-items:center;gap:5px;flex-direction:column;align-items:flex-end">
+            <div style="display:flex;align-items:center;gap:5px">
+              ${comContato ? `<span style="font-size:10px;color:#3b6d11">✓</span>` : ''}
+              ${temObs && !comContato ? '<div class="obs-dot"></div>' : ''}
+              ${acoesPend > 0 ? `<span style="font-size:10px;color:#854f0b;font-weight:600">${acoesPend} ação</span>` : ''}
+              <span style="font-size:11px;font-weight:600;color:${c.vendas===0?'#a32d2d':c.vendas<500?'#854f0b':'#3b6d11'}">${fmtBRL(c.vendas)}</span>
+            </div>
+            ${c.comprasDiretas > 0 ? `<span style="font-size:10px;color:#b5906b">+ ${fmtBRL(c.comprasDiretas)} compras</span>` : ''}
           </div>
         </div>
       `;
@@ -436,49 +581,220 @@ function renderKanban() {
   });
 }
 
-// Modal de atribuição de supervisoras
+// DASHBOARD
+function renderDashboard() {
+  if (!dashData) return;
+  const { pedidosAbertos, pedidosMes, vendasMes, apenasConsultoras } = dashData;
+
+  // --- PRÉ-BAIXA: pedidos abertos com acerto no mês atual ---
+  const prebaixaPorSup = {};
+  const prebaixaLinhas = [];
+  SUPERVISORAS.forEach(s => prebaixaPorSup[s.nome] = 0);
+
+  pedidosAbertos.forEach(p => {
+    if (!dataNoMesAtual(p.data_acerto)) return;
+    const val = parseFloat(p.valor_pre_baixa || 0);
+    if (val <= 0) return;
+    const rid = p.fk_revendedor_id;
+    const supNome = rid ? supManual[rid] : null;
+    const supObj = supNome ? SUPERVISORAS.find(s => s.nome === supNome) : null;
+    const sup = supObj ? supObj.nome : 'Sem supervisora';
+    if (prebaixaPorSup[sup] !== undefined) prebaixaPorSup[sup] += val;
+    const cons = apenasConsultoras.find(r => r.id === rid);
+    prebaixaLinhas.push({
+      nome: cons ? cons.nome : 'Consultora #' + rid,
+      sup,
+      acerto: p.data_acerto,
+      val
+    });
+  });
+
+  const totalPrebaixa = Object.values(prebaixaPorSup).reduce((a,b) => a+b, 0);
+
+  const gridPB = document.getElementById('grid-prebaixa');
+  gridPB.innerHTML = '';
+  SUPERVISORAS.forEach((s,i) => {
+    const val = prebaixaPorSup[s.nome] || 0;
+    const style = SUP_COLORS[i % SUP_COLORS.length];
+    gridPB.innerHTML += `
+      <div class="dash-card">
+        <div class="dash-card-label">Supervisora</div>
+        <div class="dash-card-name" style="color:${style.color}">${s.nome}</div>
+        <div class="dash-card-value">${fmtBRL(val)}</div>
+        <div class="dash-card-sub">pré-baixa do mês</div>
+      </div>`;
+  });
+  gridPB.innerHTML += `
+    <div class="dash-card destaque">
+      <div class="dash-card-label">Total geral</div>
+      <div class="dash-card-name">Cianita Semijoias</div>
+      <div class="dash-card-value">${fmtBRL(totalPrebaixa)}</div>
+      <div class="dash-card-sub">pré-baixa consolidada</div>
+    </div>`;
+
+  const tbodyPB = document.getElementById('tbody-prebaixa');
+  tbodyPB.innerHTML = prebaixaLinhas.sort((a,b) => b.val - a.val).map(l => `
+    <tr>
+      <td>${l.nome}</td>
+      <td><span style="font-size:11px;font-weight:600;padding:1px 6px;border-radius:20px;background:${(supColorMap[l.sup]||{bg:'#f5ede9'}).bg};color:${(supColorMap[l.sup]||{color:'#7a5c3a'}).color}">${l.sup}</span></td>
+      <td>${fmtData(l.acerto)}</td>
+      <td style="text-align:right;font-weight:600">${fmtBRL(l.val)}</td>
+    </tr>`).join('') || '<tr><td colspan="4" style="text-align:center;color:#bbb;padding:1.5rem">Nenhum acerto previsto para este mês</td></tr>';
+
+  // --- VENDAS: /venda do mês ---
+  const vendasPorSup = {};
+  SUPERVISORAS.forEach(s => vendasPorSup[s.nome] = 0);
+  let vendasDebora = 0;
+  const vendasLinhas = [];
+
+  vendasMes.forEach(v => {
+    const vendedor = v.vendedor || '';
+    const val = parseFloat(v.valor_total || 0);
+    const comprador = v.comprador ? v.comprador.nome : '-';
+
+    if (vendedor.includes(DEBORA_JUERI)) {
+      vendasDebora += val;
+      vendasLinhas.push({comprador, vendedor:'Débora', val, data: v.data_criacao});
+      return;
+    }
+
+    const supObj = SUPERVISORAS.find(s => vendedor.includes(s.jueri));
+    if (supObj) {
+      vendasPorSup[supObj.nome] = (vendasPorSup[supObj.nome] || 0) + val;
+      vendasLinhas.push({comprador, vendedor: supObj.nome, val, data: v.data_criacao});
+    }
+  });
+
+  const totalVendas = Object.values(vendasPorSup).reduce((a,b) => a+b, 0) + vendasDebora;
+
+  const gridV = document.getElementById('grid-vendas');
+  gridV.innerHTML = '';
+  SUPERVISORAS.forEach((s,i) => {
+    const val = vendasPorSup[s.nome] || 0;
+    const style = SUP_COLORS[i % SUP_COLORS.length];
+    gridV.innerHTML += `
+      <div class="dash-card">
+        <div class="dash-card-label">Supervisora</div>
+        <div class="dash-card-name" style="color:${style.color}">${s.nome}</div>
+        <div class="dash-card-value">${fmtBRL(val)}</div>
+        <div class="dash-card-sub">em vendas no mês</div>
+      </div>`;
+  });
+  gridV.innerHTML += `
+    <div class="dash-card" style="border-color:#b5906b">
+      <div class="dash-card-label">Loja física</div>
+      <div class="dash-card-name" style="color:#b5906b">Débora</div>
+      <div class="dash-card-value">${fmtBRL(vendasDebora)}</div>
+      <div class="dash-card-sub">vendas presenciais</div>
+    </div>
+    <div class="dash-card destaque">
+      <div class="dash-card-label">Total geral</div>
+      <div class="dash-card-name">Cianita Semijoias</div>
+      <div class="dash-card-value">${fmtBRL(totalVendas)}</div>
+      <div class="dash-card-sub">vendas consolidadas</div>
+    </div>`;
+
+  const tbodyV = document.getElementById('tbody-vendas');
+  tbodyV.innerHTML = vendasLinhas.sort((a,b) => b.val - a.val).map(l => `
+    <tr>
+      <td>${l.comprador}</td>
+      <td><span style="font-size:11px;font-weight:600;padding:1px 6px;border-radius:20px;background:${(supColorMap[l.vendedor]||{bg:'#fdf0e8'}).bg};color:${(supColorMap[l.vendedor]||{color:'#b5906b'}).color}">${l.vendedor}</span></td>
+      <td>${fmtData(l.data)}</td>
+      <td style="text-align:right;font-weight:600">${fmtBRL(l.val)}</td>
+    </tr>`).join('') || '<tr><td colspan="4" style="text-align:center;color:#bbb;padding:1.5rem">Nenhuma venda registrada</td></tr>';
+
+  // --- CONSOLIDADO ---
+  const gridC = document.getElementById('grid-consolidado');
+  gridC.innerHTML = '';
+  let totalGeral = 0;
+
+  SUPERVISORAS.forEach((s,i) => {
+    const pb = prebaixaPorSup[s.nome] || 0;
+    const vd = vendasPorSup[s.nome] || 0;
+    const total = pb + vd;
+    totalGeral += total;
+    const style = SUP_COLORS[i % SUP_COLORS.length];
+    gridC.innerHTML += `
+      <div class="dash-card">
+        <div class="dash-card-label">Supervisora</div>
+        <div class="dash-card-name" style="color:${style.color}">${s.nome}</div>
+        <div class="dash-card-value">${fmtBRL(total)}</div>
+        <div class="dash-card-sub">Pré-baixa ${fmtBRL(pb)} · Vendas ${fmtBRL(vd)}</div>
+      </div>`;
+  });
+  gridC.innerHTML += `
+    <div class="dash-card" style="border-color:#b5906b">
+      <div class="dash-card-label">Loja física</div>
+      <div class="dash-card-name" style="color:#b5906b">Débora</div>
+      <div class="dash-card-value">${fmtBRL(vendasDebora)}</div>
+      <div class="dash-card-sub">vendas presenciais</div>
+    </div>
+    <div class="dash-card destaque">
+      <div class="dash-card-label">Total geral</div>
+      <div class="dash-card-name">Cianita Semijoias</div>
+      <div class="dash-card-value">${fmtBRL(totalGeral + vendasDebora)}</div>
+      <div class="dash-card-sub">consolidado do mês</div>
+    </div>`;
+
+  const tbodyC = document.getElementById('tbody-consolidado');
+  tbodyC.innerHTML = SUPERVISORAS.map((s,i) => {
+    const pb = prebaixaPorSup[s.nome] || 0;
+    const vd = vendasPorSup[s.nome] || 0;
+    const style = SUP_COLORS[i % SUP_COLORS.length];
+    return `<tr>
+      <td><span style="font-size:11px;font-weight:600;padding:1px 6px;border-radius:20px;background:${style.bg};color:${style.color}">${s.nome}</span></td>
+      <td style="text-align:right">${fmtBRL(pb)}</td>
+      <td style="text-align:right">${fmtBRL(vd)}</td>
+      <td style="text-align:right;font-weight:600">${fmtBRL(pb+vd)}</td>
+    </tr>`;
+  }).join('') + `
+    <tr style="background:#fdf6f4">
+      <td><span style="font-size:11px;font-weight:600;padding:1px 6px;border-radius:20px;background:#fdf0e8;color:#b5906b">Débora</span></td>
+      <td style="text-align:right">—</td>
+      <td style="text-align:right">${fmtBRL(vendasDebora)}</td>
+      <td style="text-align:right;font-weight:600">${fmtBRL(vendasDebora)}</td>
+    </tr>
+    <tr style="font-weight:600;background:#f9f1ee">
+      <td>Total</td>
+      <td style="text-align:right">${fmtBRL(Object.values(prebaixaPorSup).reduce((a,b)=>a+b,0))}</td>
+      <td style="text-align:right">${fmtBRL(Object.values(vendasPorSup).reduce((a,b)=>a+b,0)+vendasDebora)}</td>
+      <td style="text-align:right">${fmtBRL(totalGeral+vendasDebora)}</td>
+    </tr>`;
+}
+
+// MODAL SUPERVISORAS
 function abrirModalSupervisoras() {
   const modal = document.getElementById('modal-sup');
-  const semSup = consultoras.filter(c => c.sup === 'Sem supervisora');
-  const comSup = consultoras.filter(c => c.sup !== 'Sem supervisora');
+  const semSup = consultoras.filter(c => c.sup === 'Sem supervisora').sort((a,b) => a.nome.localeCompare(b.nome));
+  const comSup = consultoras.filter(c => c.sup !== 'Sem supervisora').sort((a,b) => a.nome.localeCompare(b.nome));
 
   let html = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid #f0e4df">
-      <div>
-        <div class="sup-title">Atribuição de Supervisoras</div>
-        <div class="sup-sub">Defina a supervisora de cada consultora. Salvo automaticamente no navegador.</div>
-      </div>
+      <div><div class="sup-title">Atribuição de Supervisoras</div><div class="sup-sub">Salvo automaticamente no navegador de cada usuária.</div></div>
       <button class="btn" onclick="fecharModalSup()" style="padding:5px 8px"><i class="ti ti-x"></i></button>
-    </div>
-  `;
+    </div>`;
 
   if (semSup.length > 0) {
-    html += `<div style="font-size:11px;font-weight:600;color:#b5906b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Sem supervisora (${semSup.length})</div>`;
+    html += `<div style="font-size:11px;font-weight:600;color:#a32d2d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Sem supervisora (${semSup.length})</div>`;
     semSup.forEach(c => {
-      html += `
-        <div class="sup-consultora-item">
-          <span style="font-size:12px;font-weight:500;flex:1">${c.nome}</span>
-          <select class="sup-select" onchange="atribuirSupervisora(${c.id}, this.value)">
-            <option value="">— Selecionar —</option>
-            ${SUPERVISORAS_FIXAS.map(s => `<option value="${s}">${s}</option>`).join('')}
-          </select>
-        </div>
-      `;
+      html += `<div class="sup-consultora-item">
+        <span style="font-size:12px;font-weight:500;flex:1">${c.nome}</span>
+        <select class="sup-select" onchange="atribuirSupervisora(${c.id}, this.value)">
+          <option value="">— Selecionar —</option>
+          ${SUPERVISORAS.map(s => `<option value="${s.nome}">${s.nome}</option>`).join('')}
+        </select></div>`;
     });
   }
 
   if (comSup.length > 0) {
     html += `<div style="font-size:11px;font-weight:600;color:#b5906b;text-transform:uppercase;letter-spacing:0.5px;margin:16px 0 8px">Com supervisora (${comSup.length})</div>`;
     comSup.forEach(c => {
-      html += `
-        <div class="sup-consultora-item">
-          <span style="font-size:12px;font-weight:500;flex:1">${c.nome}</span>
-          <select class="sup-select" onchange="atribuirSupervisora(${c.id}, this.value)">
-            <option value="">— Remover —</option>
-            ${SUPERVISORAS_FIXAS.map(s => `<option value="${s}" ${c.sup===s?'selected':''}>${s}</option>`).join('')}
-          </select>
-        </div>
-      `;
+      html += `<div class="sup-consultora-item">
+        <span style="font-size:12px;font-weight:500;flex:1">${c.nome}</span>
+        <select class="sup-select" onchange="atribuirSupervisora(${c.id}, this.value)">
+          <option value="">— Remover —</option>
+          ${SUPERVISORAS.map(s => `<option value="${s.nome}" ${c.sup===s.nome?'selected':''}>${s.nome}</option>`).join('')}
+        </select></div>`;
     });
   }
 
@@ -487,15 +803,13 @@ function abrirModalSupervisoras() {
 }
 
 function atribuirSupervisora(id, sup) {
-  if (sup) {
-    supManual[id] = sup;
-  } else {
-    delete supManual[id];
-  }
+  if (sup) supManual[id] = sup;
+  else delete supManual[id];
   salvarSupManual();
   const c = consultoras.find(x => x.id === id);
   if (c) c.sup = sup || 'Sem supervisora';
   renderKanban();
+  renderDashboard();
 }
 
 function fecharModalSup(e) {
@@ -504,6 +818,7 @@ function fecharModalSup(e) {
   }
 }
 
+// MODAL CONSULTORA
 function renderAcoes(id) {
   const lista = acoesLocal[id] || [];
   if (lista.length === 0) return '<div style="font-size:11px;color:#bbb;margin-bottom:6px">Nenhuma ação cadastrada.</div>';
@@ -511,8 +826,7 @@ function renderAcoes(id) {
     <div class="acao-item">
       <input type="checkbox" style="width:15px;height:15px;flex-shrink:0;cursor:pointer;accent-color:#b5906b" ${a.done ? 'checked' : ''} onchange="toggleAcao(${id},${i},this.checked)">
       <span class="${a.done ? 'acao-done' : ''}">${a.txt}</span>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 function abrirModal(id) {
@@ -531,11 +845,8 @@ function abrirModal(id) {
   const comContato = temContatoMes(c.id);
 
   let alertaKit = '';
-  if (semKit && !vendaSemKit) {
-    alertaKit = `<div class="investig-box investig-warn"><i class="ti ti-alert-triangle"></i> Kit não bipado. Investigar com ${c.sup}: montar o kit ou encerrar o cadastro.</div>`;
-  } else if (vendaSemKit) {
-    alertaKit = `<div class="investig-box investig-danger"><i class="ti ti-alert-circle"></i> Vendas de ${fmtBRL(c.vendas)} sem kit bipado. Verificar urgentemente.</div>`;
-  }
+  if (semKit && !vendaSemKit) alertaKit = `<div class="investig-box investig-warn"><i class="ti ti-alert-triangle"></i> Kit não bipado. Investigar com ${c.sup}.</div>`;
+  else if (vendaSemKit) alertaKit = `<div class="investig-box investig-danger"><i class="ti ti-alert-circle"></i> Vendas de ${fmtBRL(c.vendas)} sem kit bipado.</div>`;
 
   document.getElementById('modal').innerHTML = `
     <div class="modal-header">
@@ -546,7 +857,7 @@ function abrirModal(id) {
           <span style="background:${sstyle.bg};color:${sstyle.color};padding:1px 7px;border-radius:20px;font-size:10px;font-weight:600">${c.sup}</span>
           <span class="nivel-badge" style="background:${nstyle.bg};color:${nstyle.color}">${c.nivel.charAt(0)+c.nivel.slice(1).toLowerCase()}</span>
           <span style="font-size:10px;color:#b5906b">${colLabel}</span>
-          ${comContato ? `<span class="badge-contato badge-com-contato">✓ Contato este mês</span>` : `<span class="badge-contato badge-sem-contato">Sem contato este mês</span>`}
+          ${comContato ? `<span class="badge-contato badge-com-contato">✓ Contato este mês</span>` : `<span class="badge-contato badge-sem-contato">Sem contato</span>`}
         </div>
       </div>
       <button class="btn" onclick="fecharModal()" style="padding:5px 8px"><i class="ti ti-x"></i></button>
@@ -554,18 +865,22 @@ function abrirModal(id) {
     ${alertaKit}
     <div class="info-grid">
       <div class="info-cell">
-        <div class="info-cell-label">Vendas do mês</div>
+        <div class="info-cell-label">Vendas mostruário</div>
         <div class="info-cell-val" style="color:${c.vendas===0?'#a32d2d':c.vendas<500?'#854f0b':'#3b6d11'}">${fmtBRL(c.vendas)}</div>
       </div>
       <div class="info-cell">
-        <div class="info-cell-label">Kit bipado</div>
-        <div class="info-cell-val" style="color:${c.temKit?'#3b6d11':'#a32d2d'}">${c.temKit ? 'Sim' : 'Não'}</div>
+        <div class="info-cell-label">Compras diretas</div>
+        <div class="info-cell-val" style="color:${c.comprasDiretas>0?'#b5906b':'#bbb'}">${c.comprasDiretas > 0 ? fmtBRL(c.comprasDiretas) : '—'}</div>
       </div>
       <div class="info-cell">
         <div class="info-cell-label">Data de acerto</div>
         <div class="info-cell-val" style="color:${acerto?(acerto.cls==='vencido'?'#a32d2d':acerto.cls==='hoje'?'#3b6d11':'#1a1a1a'):'#bbb'}">${acerto ? acerto.label : '—'}</div>
       </div>
-      ${c.telefone ? `<div class="info-cell"><div class="info-cell-label">Telefone</div><div class="info-cell-val" style="font-size:12px">${c.telefone}</div></div>` : ''}
+      <div class="info-cell">
+        <div class="info-cell-label">Kit bipado</div>
+        <div class="info-cell-val" style="color:${c.temKit?'#3b6d11':'#a32d2d'}">${c.temKit ? 'Sim' : 'Não'}</div>
+      </div>
+      ${c.telefone ? `<div class="info-cell" style="grid-column:1/-1"><div class="info-cell-label">Telefone</div><div class="info-cell-val" style="font-size:12px">${c.telefone}</div></div>` : ''}
     </div>
     <div class="field-label"><i class="ti ti-notes" style="font-size:12px"></i> Observações de contato</div>
     <div id="obs-list-${id}">
@@ -580,8 +895,7 @@ function abrirModal(id) {
     <textarea id="nova-acao" placeholder="Adicionar nova ação..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="adicionarAcao(${id})"><i class="ti ti-plus"></i> Adicionar ação</button>
-    </div>
-  `;
+    </div>`;
   document.getElementById('overlay').classList.add('open');
 }
 
@@ -623,28 +937,21 @@ function fecharModal(e) {
   }
 }
 
-function recarregar() {
-  consultoras = [];
-  document.getElementById('kanban').innerHTML = '';
-  carregarDados();
-}
+function recarregar() { consultoras = []; document.getElementById('kanban').innerHTML = ''; carregarDados(); }
+function recarregarDash() { carregarDados(); }
 
 function sair() {
   localStorage.removeItem('cianita_token');
-  TOKEN = '';
-  consultoras = [];
-  document.getElementById('painel').style.display = 'none';
-  document.getElementById('topbar-controls').style.display = 'none';
+  TOKEN = ''; consultoras = []; dashData = null;
+  document.getElementById('sidebar').style.display = 'none';
+  document.getElementById('main-wrap').style.display = 'none';
   document.getElementById('setup-wrap').style.display = 'flex';
   document.getElementById('token-input').value = '';
   document.getElementById('status-bar').className = 'status-bar';
 }
 
 const savedToken = localStorage.getItem('cianita_token');
-if (savedToken) {
-  TOKEN = savedToken;
-  document.getElementById('token-input').value = savedToken;
-}
+if (savedToken) { TOKEN = savedToken; document.getElementById('token-input').value = savedToken; }
 </script>
 </body>
 </html>
