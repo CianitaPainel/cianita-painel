@@ -3,81 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cianita Semijoias · Painel de Consultoras</title>
+<title>Cianita Semijoias · Painel</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;color:#1a1a1a;background:#f5f5f2;min-height:100vh}
-.topbar{background:#fff;border-bottom:1px solid #e5e5e5;padding:0 1.5rem;display:flex;align-items:center;gap:12px;height:52px;position:sticky;top:0;z-index:100}
-.topbar-logo{font-size:15px;font-weight:600;color:#1a1a1a;margin-right:auto}
-.topbar-logo span{color:#b5906b}
-select,input,textarea,button{font-family:inherit;font-size:13px}
-select{padding:6px 10px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a1a;cursor:pointer}
-.btn{padding:7px 14px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:12px;color:#555;display:inline-flex;align-items:center;gap:5px}
-.btn:hover{background:#f5f5f2}
-.btn-primary{border-color:#185fa5;background:#e6f1fb;color:#0c447c}
-.btn-connect{background:#185fa5;color:#fff;border-color:#185fa5;padding:8px 20px;font-size:13px;font-weight:500}
-.btn-connect:hover{background:#0c447c}
+body{font-family:'Inter',sans-serif;font-size:13px;color:#1a1a1a;background:#fdf6f4;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid #f0e4df;padding:0 1.5rem;display:flex;align-items:center;gap:12px;height:56px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(181,144,107,0.06)}
+.topbar-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;letter-spacing:2px;color:#1a1a1a;margin-right:auto;text-transform:uppercase}
+.topbar-logo span{font-weight:400;font-size:13px;letter-spacing:3px;color:#b5906b;display:block;line-height:1;font-family:'Inter',sans-serif;text-transform:uppercase}
+select,input,textarea,button{font-family:'Inter',sans-serif;font-size:13px}
+select{padding:6px 10px;border-radius:8px;border:1px solid #e8d8d0;background:#fff;color:#1a1a1a;cursor:pointer}
+.btn{padding:7px 14px;border-radius:8px;border:1px solid #e8d8d0;background:#fff;cursor:pointer;font-size:12px;color:#666;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:#fdf6f4}
+.btn-primary{border-color:#b5906b;background:#fdf0e8;color:#7a5c3a}
+.btn-connect{background:#1a1a1a;color:#fff;border-color:#1a1a1a;padding:9px 24px;font-size:13px;font-weight:500;border-radius:8px;letter-spacing:0.5px}
+.btn-connect:hover{background:#333}
 .main{padding:1.5rem}
-.setup-card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:2rem;max-width:520px;margin:2rem auto}
-.setup-title{font-size:18px;font-weight:600;margin-bottom:6px}
-.setup-sub{font-size:13px;color:#666;margin-bottom:1.5rem;line-height:1.6}
-.setup-field{margin-bottom:12px}
-.setup-label{font-size:11px;color:#888;margin-bottom:4px;display:block}
-.setup-input{width:100%;padding:9px 12px;border-radius:8px;border:1px solid #ddd;font-size:13px;color:#1a1a1a}
-.setup-input:focus{outline:none;border-color:#185fa5}
+.setup-wrap{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 56px)}
+.setup-card{background:#fff;border:1px solid #f0e4df;border-radius:16px;padding:2.5rem;width:100%;max-width:460px;box-shadow:0 4px 24px rgba(181,144,107,0.08)}
+.setup-logo{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;letter-spacing:3px;text-align:center;margin-bottom:4px;text-transform:uppercase}
+.setup-sub-logo{font-size:11px;letter-spacing:4px;color:#b5906b;text-align:center;margin-bottom:2rem;text-transform:uppercase}
+.setup-label{font-size:11px;color:#999;margin-bottom:5px;display:block;letter-spacing:0.5px;text-transform:uppercase}
+.setup-input{width:100%;padding:10px 14px;border-radius:8px;border:1px solid #e8d8d0;font-size:13px;color:#1a1a1a;background:#fdf9f7}
+.setup-input:focus{outline:none;border-color:#b5906b}
+.setup-field{margin-bottom:16px}
 .status-bar{font-size:12px;margin-top:12px;padding:10px 14px;border-radius:8px;display:none;line-height:1.5}
-.status-loading{background:#e6f1fb;color:#0c447c;display:block}
+.status-loading{background:#fdf0e8;color:#7a5c3a;display:block}
 .status-error{background:#fcebeb;color:#a32d2d;display:block}
-.toolbar{display:flex;gap:8px;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap}
-.toolbar-title{font-size:15px;font-weight:600;margin-right:auto;color:#1a1a1a}
-.toolbar-title span{font-size:12px;font-weight:400;color:#888;margin-left:6px}
+.toolbar{display:flex;gap:8px;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap}
+.toolbar-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;letter-spacing:1px;margin-right:auto;color:#1a1a1a}
+.toolbar-title span{font-size:12px;font-weight:400;color:#b5906b;margin-left:8px;font-family:'Inter',sans-serif;letter-spacing:0}
 .kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:start}
 @media(max-width:900px){.kanban{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.kanban{grid-template-columns:1fr}}
-.col{background:#f0ede8;border-radius:12px;padding:12px}
-.col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;padding-bottom:8px;border-bottom:1px solid rgba(0,0,0,0.08)}
-.col-title{font-weight:600;font-size:13px}
+.col{background:#f9f1ee;border-radius:14px;padding:12px}
+.col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;padding-bottom:8px;border-bottom:1px solid rgba(181,144,107,0.15)}
+.col-title{font-weight:600;font-size:12px;letter-spacing:0.3px;text-transform:uppercase;color:#555}
 .col-count{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
-.col-hint{font-size:10px;color:#888;margin-bottom:10px;line-height:1.4}
-.card{background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:border-color 0.15s}
-.card:hover{border-color:#aaa}
+.col-hint{font-size:10px;color:#b5906b;margin-bottom:10px;line-height:1.4}
+.card{background:#fff;border:1px solid #f0e4df;border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:all 0.15s}
+.card:hover{border-color:#b5906b;box-shadow:0 2px 8px rgba(181,144,107,0.1)}
 .card:last-child{margin-bottom:0}
-.card-name{font-weight:600;font-size:12px;margin-bottom:5px}
+.card-name{font-weight:600;font-size:12px;margin-bottom:5px;color:#1a1a1a}
 .card-alert{font-size:10px;margin-top:7px;padding:5px 8px;border-left:2px solid;border-radius:0 6px 6px 0}
 .card-alert-warn{background:#faeeda;color:#854f0b;border-color:#ef9f27}
 .card-alert-danger{background:#fcebeb;color:#a32d2d;border-color:#e24b4a}
 .nivel-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px}
-.obs-dot{width:7px;height:7px;border-radius:50%;background:#185fa5;flex-shrink:0}
-.overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.obs-dot{width:7px;height:7px;border-radius:50%;background:#b5906b;flex-shrink:0}
+.overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.35);z-index:200;align-items:center;justify-content:center;padding:1rem}
 .overlay.open{display:flex}
-.modal{background:#fff;border-radius:14px;padding:1.5rem;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
-.modal-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid #eee}
+.modal{background:#fff;border-radius:16px;padding:1.5rem;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,0.15)}
+.modal-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid #f0e4df}
 .avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
-textarea{width:100%;padding:9px 12px;border-radius:8px;border:1px solid #ddd;color:#1a1a1a;resize:vertical;min-height:64px;line-height:1.5;font-family:inherit;font-size:13px}
-textarea:focus{outline:none;border-color:#185fa5}
-.obs-item{background:#f5f5f2;border-radius:8px;padding:9px 11px;margin-bottom:6px;font-size:12px;line-height:1.5}
-.obs-item-date{font-size:10px;color:#999;margin-top:3px}
+textarea{width:100%;padding:9px 12px;border-radius:8px;border:1px solid #e8d8d0;color:#1a1a1a;resize:vertical;min-height:64px;line-height:1.5;font-family:'Inter',sans-serif;font-size:13px;background:#fdf9f7}
+textarea:focus{outline:none;border-color:#b5906b}
+.obs-item{background:#fdf6f4;border-radius:8px;padding:9px 11px;margin-bottom:6px;font-size:12px;line-height:1.5}
+.obs-item-date{font-size:10px;color:#b5906b;margin-top:3px}
 .btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.info-cell{background:#f5f5f2;border-radius:8px;padding:9px 11px}
-.info-cell-label{font-size:10px;color:#888}
+.info-cell{background:#fdf6f4;border-radius:8px;padding:9px 11px}
+.info-cell-label{font-size:10px;color:#b5906b;text-transform:uppercase;letter-spacing:0.5px}
 .info-cell-val{font-size:14px;font-weight:600;margin-top:2px}
-.field-label{font-size:11px;color:#888;margin-bottom:5px;margin-top:14px;display:flex;align-items:center;gap:5px}
-.acao-item{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid #f0f0f0;font-size:12px}
+.field-label{font-size:10px;color:#b5906b;margin-bottom:5px;margin-top:14px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:0.5px}
+.acao-item{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid #f5ede9;font-size:12px}
 .acao-item:last-child{border-bottom:none}
-.acao-done{text-decoration:line-through;color:#aaa}
+.acao-done{text-decoration:line-through;color:#bbb}
 .investig-box{border-left:3px solid;border-radius:0 8px 8px 0;padding:10px 13px;margin-bottom:12px;font-size:12px;line-height:1.5}
 .investig-warn{border-color:#ef9f27;background:#faeeda;color:#854f0b}
 .investig-danger{border-color:#e24b4a;background:#fcebeb;color:#a32d2d}
-.empty-col{font-size:11px;color:#aaa;text-align:center;padding:16px 0}
+.empty-col{font-size:11px;color:#c9a898;text-align:center;padding:16px 0}
 .topbar-controls{display:none;align-items:center;gap:8px;flex-wrap:wrap}
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div class="topbar-logo">Cianita <span>Semijoias</span></div>
+  <div class="topbar-logo">Cianita<span>Semijoias</span></div>
   <div class="topbar-controls" id="topbar-controls">
     <select id="filtro-sup" onchange="renderKanban()">
       <option value="todas">Todas as supervisoras</option>
@@ -91,20 +93,22 @@ textarea:focus{outline:none;border-color:#185fa5}
 </div>
 
 <div class="main">
-  <div id="setup-card" class="setup-card">
-    <div class="setup-title">Acessar painel</div>
-    <div class="setup-sub">Use o token gerado em <strong>Configurações → API</strong> dentro do Jueri.</div>
-    <div class="setup-field">
-      <label class="setup-label">Token de API do Jueri</label>
-      <input type="password" class="setup-input" id="token-input" placeholder="Cole seu token aqui..." autocomplete="off">
+  <div id="setup-wrap" class="setup-wrap">
+    <div class="setup-card">
+      <div class="setup-logo">Cianita</div>
+      <div class="setup-sub-logo">Semijoias · Painel</div>
+      <div class="setup-field">
+        <label class="setup-label">Token de API do Jueri</label>
+        <input type="password" class="setup-input" id="token-input" placeholder="Cole seu token aqui..." autocomplete="off">
+      </div>
+      <button class="btn btn-connect" onclick="iniciarCarregamento()"><i class="ti ti-plug"></i> Conectar</button>
+      <div class="status-bar" id="status-bar"></div>
     </div>
-    <button class="btn btn-connect" onclick="iniciarCarregamento()"><i class="ti ti-plug"></i> Conectar</button>
-    <div class="status-bar" id="status-bar"></div>
   </div>
 
   <div id="painel" style="display:none">
     <div class="toolbar">
-      <div class="toolbar-title">Kanban de consultoras <span id="mes-label"></span></div>
+      <div class="toolbar-title">Consultoras <span id="mes-label"></span></div>
     </div>
     <div class="kanban" id="kanban"></div>
   </div>
@@ -120,10 +124,10 @@ const PROXY = '/api/jueri/' + CLIENTE_ID;
 
 const NIVEL_STYLE = {
   'BRONZE':      {bg:'#faece7',color:'#712b13'},
-  'PRATA':       {bg:'#f1efe8',color:'#444441'},
+  'PRATA':       {bg:'#f1efe8',color:'#555553'},
   'OURO':        {bg:'#faeeda',color:'#633806'},
   'DIAMANTE':    {bg:'#e6f1fb',color:'#0c447c'},
-  'EMBAIXADORA': {bg:'#eeedfe',color:'#3c3489'}
+  'EMBAIXADORA': {bg:'#fdf0f5',color:'#72243e'}
 };
 const SUP_COLORS = [
   {bg:'#e1f5ee',color:'#085041'},
@@ -132,13 +136,13 @@ const SUP_COLORS = [
   {bg:'#eeedfe',color:'#3c3489'},
   {bg:'#e6f1fb',color:'#0c447c'},
 ];
-const AVATAR_BG  = ['#b5d4f4','#9fe1cb','#f5c4b3','#f4c0d1','#fac775','#c0dd97','#cecbf6','#f0997b'];
-const AVATAR_CLR = ['#0c447c','#085041','#712b13','#72243e','#854f0b','#27500a','#3c3489','#993c1d'];
+const AVATAR_BG  = ['#f5d5c8','#f4c0d1','#fac775','#c0dd97','#b5d4f4','#cecbf6','#9fe1cb','#f0997b'];
+const AVATAR_CLR = ['#7a2e1a','#72243e','#633806','#27500a','#0c447c','#3c3489','#085041','#993c1d'];
 const COLUNAS = [
-  {id:'zerada',         label:'Zeradas',           hint:'Kit bipado, sem vendas registradas no mês.',                                countBg:'#fcebeb',countClr:'#a32d2d'},
-  {id:'abaixo',         label:'Abaixo de R$ 500',  hint:'Vendas abaixo do mínimo — frete e renovação por conta delas.',             countBg:'#faeeda',countClr:'#854f0b'},
-  {id:'acima',          label:'Acima de R$ 500',   hint:'Operação regular dentro do modelo de consignado.',                         countBg:'#eaf3de',countClr:'#3b6d11'},
-  {id:'sem-mostruario', label:'Sem kit separado',  hint:'Sem pedido aberto — kit não foi bipado. Investigar com supervisora.',      countBg:'#f1efe8',countClr:'#5f5e5a'},
+  {id:'zerada',         label:'Zeradas',           hint:'Kit bipado, sem vendas no mês.',                                          countBg:'#fcebeb',countClr:'#a32d2d'},
+  {id:'abaixo',         label:'Abaixo de R$ 500',  hint:'Abaixo do mínimo — frete por conta delas.',                              countBg:'#faeeda',countClr:'#854f0b'},
+  {id:'acima',          label:'Acima de R$ 500',   hint:'Operação regular dentro do consignado.',                                  countBg:'#eaf3de',countClr:'#3b6d11'},
+  {id:'sem-mostruario', label:'Sem kit separado',  hint:'Kit não bipado — investigar com supervisora.',                           countBg:'#f5ede9',countClr:'#7a5c3a'},
 ];
 
 let TOKEN = '';
@@ -197,13 +201,21 @@ async function iniciarCarregamento() {
 
 async function carregarDados() {
   try {
-    setStatus('<i class="ti ti-loader"></i> Buscando consultoras ativas...', 'loading');
+    setStatus('<i class="ti ti-loader"></i> Buscando consultoras...', 'loading');
 
-    // Busca revendedores ativos com fk_tipo_revendedor_id=2 (consultoras)
+    // Busca todos revendedores ativos
     const revendedores = await buscarTodas('/revendedor?status=1');
+
+    // Separa gerentes (supervisoras) e consultoras
+    const gerentesMap = {};
+    revendedores.forEach(r => {
+      if (r.fk_tipo_revendedor_id === 1) {
+        gerentesMap[r.id] = r.nome || 'Supervisora';
+      }
+    });
     const apenasConsultoras = revendedores.filter(r => r.fk_tipo_revendedor_id === 2);
 
-    // Data do mês atual
+    // Data do mês
     const hoje = new Date();
     const ano = hoje.getFullYear();
     const mes = String(hoje.getMonth() + 1).padStart(2, '0');
@@ -214,34 +226,24 @@ async function carregarDados() {
 
     setStatus('<i class="ti ti-loader"></i> Buscando pedidos...', 'loading');
 
-    // Busca pedidos abertos (kit bipado) e pedidos do mês (vendas)
     const [pedidosAbertos, pedidosMes] = await Promise.all([
       buscarTodas('/pedido?status=1'),
       buscarTodas('/pedido?data_criacao_inicial=' + dataIni + '&data_criacao_final=' + dataFim)
     ]);
 
-    // Kit bipado = tem pedido com status "Aberto"
+    // Kit bipado = tem pedido Aberto
     const temKitAberto = {};
     pedidosAbertos.forEach(p => {
-      if (p.fk_revendedor_id && p.status === 'Aberto') {
-        temKitAberto[p.fk_revendedor_id] = true;
-      }
+      if (p.fk_revendedor_id) temKitAberto[p.fk_revendedor_id] = true;
     });
 
-    // Vendas do mês = valor_pre_baixa dos pedidos abertos do mês
-    // + valor_total dos pedidos Baixados do mês
+    // Vendas e supervisora dos pedidos do mês
     const vendasPorRev = {};
     const supPorRev = {};
     pedidosMes.forEach(p => {
       const rid = p.fk_revendedor_id;
       if (!rid) return;
-
-      // Supervisora vem do pedido
-      if (p.supervisor_nome) {
-        supPorRev[rid] = p.supervisor_nome;
-      }
-
-      // Vendas: pré-baixa (pedido aberto com valor) ou baixado
+      if (p.supervisor_nome) supPorRev[rid] = p.supervisor_nome;
       if (p.status === 'Aberto') {
         const val = parseFloat(p.valor_pre_baixa || 0);
         if (val > 0) vendasPorRev[rid] = (vendasPorRev[rid] || 0) + val;
@@ -251,11 +253,25 @@ async function carregarDados() {
       }
     });
 
-    // Monta lista de supervisoras únicas
-    supervisoras = [...new Set(Object.values(supPorRev))].filter(Boolean).sort();
+    // Monta consultoras — supervisora vem do pedido OU do fk_revendedor_gerente_id
+    consultoras = apenasConsultoras.map(r => {
+      const nome = r.nome || 'Consultora';
+      // Tenta supervisora pelo pedido primeiro, depois pelo cadastro
+      let sup = supPorRev[r.id];
+      if (!sup && r.fk_revendedor_gerente_id) {
+        sup = gerentesMap[r.fk_revendedor_gerente_id] || null;
+      }
+      if (!sup) sup = 'Sem supervisora';
+      const vendas = vendasPorRev[r.id] || 0;
+      const temKit = !!temKitAberto[r.id];
+      const nivel = (r.level_revendedor || 'BRONZE').toUpperCase();
+      return { id: r.id, nome, sup, vendas, temKit, nivel, telefone: r.telefone_1 || r.telefone_2 || '' };
+    });
+
+    // Supervisoras únicas
+    supervisoras = [...new Set(consultoras.map(c => c.sup).filter(s => s !== 'Sem supervisora'))].sort();
     supervisoras.forEach((s, i) => { supColorMap[s] = SUP_COLORS[i % SUP_COLORS.length]; });
 
-    // Popula filtros
     const selSup = document.getElementById('filtro-sup');
     selSup.innerHTML = '<option value="todas">Todas as supervisoras</option>';
     supervisoras.forEach(s => {
@@ -272,18 +288,7 @@ async function carregarDados() {
       selNivel.appendChild(o);
     });
 
-    // Monta consultoras
-    consultoras = apenasConsultoras.map(r => {
-      const nome = r.nome || 'Consultora';
-      const sup = supPorRev[r.id] || 'Sem supervisora';
-      const vendas = vendasPorRev[r.id] || 0;
-      const temKit = !!temKitAberto[r.id];
-      // Nível vem do campo level_revendedor
-      const nivel = (r.level_revendedor || 'BRONZE').toUpperCase();
-      return { id: r.id, nome, sup, vendas, temKit, nivel, telefone: r.telefone_1 || r.telefone_2 || '' };
-    });
-
-    document.getElementById('setup-card').style.display = 'none';
+    document.getElementById('setup-wrap').style.display = 'none';
     document.getElementById('painel').style.display = 'block';
     document.getElementById('topbar-controls').style.display = 'flex';
     setStatus('', 'loading');
@@ -329,8 +334,8 @@ function renderKanban() {
     cards.forEach(c => {
       const bg = AVATAR_BG[c.id % AVATAR_BG.length];
       const clr = AVATAR_CLR[c.id % AVATAR_CLR.length];
-      const nstyle = NIVEL_STYLE[c.nivel] || {bg:'#f1efe8',color:'#444441'};
-      const sstyle = supColorMap[c.sup] || SUP_COLORS[0];
+      const nstyle = NIVEL_STYLE[c.nivel] || {bg:'#faece7',color:'#712b13'};
+      const sstyle = supColorMap[c.sup] || {bg:'#f5ede9',color:'#7a5c3a'};
       const semKit = col.id === 'sem-mostruario';
       const vendaSemKit = semKit && c.vendas > 0;
       const temObs = (obsLocal[c.id] || []).length > 0;
@@ -338,7 +343,7 @@ function renderKanban() {
 
       const card = document.createElement('div');
       card.className = 'card';
-      if (semKit) card.style.borderColor = '#ef9f27';
+      if (semKit) card.style.borderColor = '#e8d0c0';
       card.onclick = () => abrirModal(c.id);
       card.innerHTML = `
         <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
@@ -348,7 +353,7 @@ function renderKanban() {
         <div style="margin-bottom:5px">
           <span style="background:${sstyle.bg};color:${sstyle.color};padding:1px 6px;border-radius:20px;font-size:10px;font-weight:600">${c.sup}</span>
         </div>
-        ${semKit && !vendaSemKit ? `<div class="card-alert card-alert-warn"><i class="ti ti-alert-triangle"></i> Kit não bipado — sem mostruário físico</div>` : ''}
+        ${semKit && !vendaSemKit ? `<div class="card-alert card-alert-warn"><i class="ti ti-alert-triangle"></i> Kit não bipado</div>` : ''}
         ${vendaSemKit ? `<div class="card-alert card-alert-danger"><i class="ti ti-alert-circle"></i> Vendas sem kit registrado</div>` : ''}
         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:7px">
           <span class="nivel-badge" style="background:${nstyle.bg};color:${nstyle.color}">${c.nivel.charAt(0)+c.nivel.slice(1).toLowerCase()}</span>
@@ -367,10 +372,10 @@ function renderKanban() {
 
 function renderAcoes(id) {
   const lista = acoesLocal[id] || [];
-  if (lista.length === 0) return '<div style="font-size:11px;color:#aaa;margin-bottom:6px">Nenhuma ação cadastrada.</div>';
+  if (lista.length === 0) return '<div style="font-size:11px;color:#bbb;margin-bottom:6px">Nenhuma ação cadastrada.</div>';
   return lista.map((a, i) => `
     <div class="acao-item">
-      <input type="checkbox" style="width:15px;height:15px;flex-shrink:0;cursor:pointer" ${a.done ? 'checked' : ''} onchange="toggleAcao(${id},${i},this.checked)">
+      <input type="checkbox" style="width:15px;height:15px;flex-shrink:0;cursor:pointer;accent-color:#b5906b" ${a.done ? 'checked' : ''} onchange="toggleAcao(${id},${i},this.checked)">
       <span class="${a.done ? 'acao-done' : ''}">${a.txt}</span>
     </div>
   `).join('');
@@ -381,8 +386,8 @@ function abrirModal(id) {
   if (!c) return;
   const bg = AVATAR_BG[c.id % AVATAR_BG.length];
   const clr = AVATAR_CLR[c.id % AVATAR_CLR.length];
-  const nstyle = NIVEL_STYLE[c.nivel] || {bg:'#f1efe8',color:'#444441'};
-  const sstyle = supColorMap[c.sup] || SUP_COLORS[0];
+  const nstyle = NIVEL_STYLE[c.nivel] || {bg:'#faece7',color:'#712b13'};
+  const sstyle = supColorMap[c.sup] || {bg:'#f5ede9',color:'#7a5c3a'};
   const col = coluna(c);
   const colLabel = COLUNAS.find(x => x.id === col)?.label || '';
   const semKit = col === 'sem-mostruario';
@@ -398,13 +403,13 @@ function abrirModal(id) {
 
   document.getElementById('modal').innerHTML = `
     <div class="modal-header">
-      <div class="avatar" style="width:38px;height:38px;font-size:13px;background:${bg};color:${clr}">${initials(c.nome)}</div>
+      <div class="avatar" style="width:40px;height:40px;font-size:13px;background:${bg};color:${clr}">${initials(c.nome)}</div>
       <div style="flex:1">
-        <div style="font-weight:700;font-size:14px">${c.nome}</div>
+        <div style="font-weight:600;font-size:14px">${c.nome}</div>
         <div style="display:flex;gap:5px;margin-top:4px;flex-wrap:wrap">
           <span style="background:${sstyle.bg};color:${sstyle.color};padding:1px 7px;border-radius:20px;font-size:10px;font-weight:600">${c.sup}</span>
           <span class="nivel-badge" style="background:${nstyle.bg};color:${nstyle.color}">${c.nivel.charAt(0)+c.nivel.slice(1).toLowerCase()}</span>
-          <span style="font-size:10px;color:#888">${colLabel}</span>
+          <span style="font-size:10px;color:#b5906b">${colLabel}</span>
         </div>
       </div>
       <button class="btn" onclick="fecharModal()" style="padding:5px 8px"><i class="ti ti-x"></i></button>
@@ -421,15 +426,15 @@ function abrirModal(id) {
       </div>
       ${c.telefone ? `<div class="info-cell" style="grid-column:1/-1"><div class="info-cell-label">Telefone</div><div class="info-cell-val">${c.telefone}</div></div>` : ''}
     </div>
-    <div class="field-label"><i class="ti ti-notes" style="font-size:13px"></i> Observações de contato</div>
+    <div class="field-label"><i class="ti ti-notes" style="font-size:12px"></i> Observações de contato</div>
     <div id="obs-list-${id}">
-      ${obsList.length === 0 ? '<div style="font-size:11px;color:#aaa;margin-bottom:6px">Nenhuma observação ainda.</div>' : obsList.map(o => `<div class="obs-item">${o.txt}<div class="obs-item-date">${o.data}</div></div>`).join('')}
+      ${obsList.length === 0 ? '<div style="font-size:11px;color:#bbb;margin-bottom:6px">Nenhuma observação ainda.</div>' : obsList.map(o => `<div class="obs-item">${o.txt}<div class="obs-item-date">${o.data}</div></div>`).join('')}
     </div>
     <textarea id="nova-obs" placeholder="Registrar nova observação de contato..."></textarea>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="adicionarObs(${id})"><i class="ti ti-check"></i> Salvar observação</button>
     </div>
-    <div class="field-label" style="margin-top:16px"><i class="ti ti-checkbox" style="font-size:13px"></i> Ações atribuídas</div>
+    <div class="field-label" style="margin-top:16px"><i class="ti ti-checkbox" style="font-size:12px"></i> Ações atribuídas</div>
     <div id="acoes-list-${id}">${renderAcoes(id)}</div>
     <textarea id="nova-acao" placeholder="Adicionar nova ação..."></textarea>
     <div class="btn-row">
@@ -489,7 +494,7 @@ function sair() {
   consultoras = [];
   document.getElementById('painel').style.display = 'none';
   document.getElementById('topbar-controls').style.display = 'none';
-  document.getElementById('setup-card').style.display = 'block';
+  document.getElementById('setup-wrap').style.display = 'flex';
   document.getElementById('token-input').value = '';
   document.getElementById('status-bar').className = 'status-bar';
 }
