@@ -214,6 +214,7 @@ textarea:focus{outline:none;border-color:#b5906b}
       <button class="dash-tab" onclick="trocarDash('baixados', this)"><i class="ti ti-circle-check"></i> Baixados</button>
       <button class="dash-tab" onclick="trocarDash('vendas', this)"><i class="ti ti-receipt"></i> Vendas</button>
       <button class="dash-tab" onclick="trocarDash('consolidado', this)"><i class="ti ti-chart-pie"></i> Consolidado</button>
+      <button class="dash-tab" onclick="trocarDash('diagnostico', this)"><i class="ti ti-bug"></i> Diagnóstico</button>
     </div>
 
     <!-- PRÉ-BAIXA -->
@@ -242,6 +243,20 @@ textarea:focus{outline:none;border-color:#b5906b}
       <div class="dash-sub">Faturamento real do mês: pedidos baixados + vendas por supervisora e total geral.</div>
       <div class="dash-grid" id="grid-consolidado"></div>
       <div class="dash-table"><table><thead><tr><th>Supervisora</th><th style="text-align:right">Baixados</th><th style="text-align:right">Vendas</th><th style="text-align:right">Total</th></tr></thead><tbody id="tbody-consolidado"></tbody></table></div>
+    </div>
+
+    <!-- DIAGNÓSTICO -->
+    <div class="dash-section" id="dash-diagnostico">
+      <div class="dash-sub">Comparativo bruto de todos os dados recebidos da API — use para identificar diferenças com o Jueri.</div>
+      <div class="dash-grid" id="grid-diagnostico"></div>
+      <div style="margin-bottom:1rem">
+        <div class="dash-title" style="font-size:14px;margin-bottom:0.5rem">Todas as vendas do mês (bruto)</div>
+        <div class="dash-table"><table><thead><tr><th>Nº</th><th>Comprador</th><th>Vendedor</th><th>Status</th><th>Data</th><th style="text-align:right">Valor Total</th></tr></thead><tbody id="tbody-diag-vendas"></tbody></table></div>
+      </div>
+      <div>
+        <div class="dash-title" style="font-size:14px;margin-bottom:0.5rem">Todos os pedidos baixados no mês (bruto)</div>
+        <div class="dash-table"><table><thead><tr><th>Nº</th><th>Consultora</th><th>Status</th><th>Data criação</th><th>Data baixa</th><th style="text-align:right">Valor Total</th></tr></thead><tbody id="tbody-diag-baixados"></tbody></table></div>
+      </div>
     </div>
   </div>
 
@@ -842,6 +857,68 @@ function renderDashboard() {
       <td style="text-align:right">${fmtBRL(totalVendasSup + vendasDebora)}</td>
       <td style="text-align:right">${fmtBRL(totalGeral + vendasDebora)}</td>
     </tr>`;
+
+  // --- DIAGNÓSTICO: dados brutos da API para comparação com Jueri ---
+  const totalVendasBruto = vendasMes.reduce((a,v) => a + parseFloat(v.valor_total||0), 0);
+  const baixadosDoMes = pedidosBaixadosMes.filter(p => dataNoMesAtual(p.data_baixa));
+  const totalBaixadosBruto = baixadosDoMes.reduce((a,p) => a + parseFloat(p.valor_total||0), 0);
+
+  const gridDiag = document.getElementById('grid-diagnostico');
+  if (gridDiag) {
+    gridDiag.innerHTML = `
+      <div class="dash-card">
+        <div class="dash-card-label">Vendas brutas (API /venda)</div>
+        <div class="dash-card-name">Todos os status</div>
+        <div class="dash-card-value">${fmtBRL(totalVendasBruto)}</div>
+        <div class="dash-card-sub">${vendasMes.length} registros · canceladas incluídas</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-label">Vendas brutas (excl. canceladas)</div>
+        <div class="dash-card-name">Status Vendido</div>
+        <div class="dash-card-value">${fmtBRL(vendasMes.filter(v=>v.status!=='Cancelado').reduce((a,v)=>a+parseFloat(v.valor_total||0),0))}</div>
+        <div class="dash-card-sub">${vendasMes.filter(v=>v.status!=='Cancelado').length} registros</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-label">Baixados brutos (API /pedido)</div>
+        <div class="dash-card-name">Data baixa no mês</div>
+        <div class="dash-card-value">${fmtBRL(totalBaixadosBruto)}</div>
+        <div class="dash-card-sub">${baixadosDoMes.length} pedidos</div>
+      </div>
+      <div class="dash-card destaque">
+        <div class="dash-card-label">Total bruto API</div>
+        <div class="dash-card-name">Pedidos + Vendas</div>
+        <div class="dash-card-value">${fmtBRL(totalVendasBruto + totalBaixadosBruto)}</div>
+        <div class="dash-card-sub">compare com Faturamento Bruto Jueri</div>
+      </div>`;
+
+    const tbodyDiagV = document.getElementById('tbody-diag-vendas');
+    if (tbodyDiagV) {
+      tbodyDiagV.innerHTML = [...vendasMes].sort((a,b) => (b.id||0)-(a.id||0)).map(v => `
+        <tr style="${v.status==='Cancelado'?'opacity:0.45;background:#fff5f5':''}">
+          <td style="color:#b5906b">#${v.codigo_venda||v.id}</td>
+          <td>${v.comprador?v.comprador.nome:'-'}</td>
+          <td>${v.vendedor||'-'}</td>
+          <td><span style="font-size:10px;padding:1px 5px;border-radius:10px;background:${v.status==='Cancelado'?'#fcebeb':'#eaf3de'};color:${v.status==='Cancelado'?'#a32d2d':'#3b6d11'}">${v.status||'-'}</span></td>
+          <td>${fmtData(v.data_criacao)}</td>
+          <td style="text-align:right;font-weight:600">${fmtBRL(v.valor_total||0)}</td>
+        </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:#bbb;padding:1.5rem">Nenhuma venda</td></tr>';
+    }
+
+    const tbodyDiagBX = document.getElementById('tbody-diag-baixados');
+    if (tbodyDiagBX) {
+      tbodyDiagBX.innerHTML = [...baixadosDoMes].sort((a,b) => (b.id||0)-(a.id||0)).map(p => {
+        const nomeC = todasConsultorasMap[p.fk_revendedor_id] || 'ID #' + p.fk_revendedor_id;
+        return `<tr>
+          <td style="color:#b5906b">#${p.codigo_pedido||p.id}</td>
+          <td>${nomeC}</td>
+          <td><span style="font-size:10px;padding:1px 5px;border-radius:10px;background:#eaf3de;color:#3b6d11">${p.status}</span></td>
+          <td>${fmtData(p.data_criacao)}</td>
+          <td>${fmtData(p.data_baixa)}</td>
+          <td style="text-align:right;font-weight:600">${fmtBRL(p.valor_total||0)}</td>
+        </tr>`;
+      }).join('') || '<tr><td colspan="6" style="text-align:center;color:#bbb;padding:1.5rem">Nenhum baixado</td></tr>';
+    }
+  }
 }
 
 // MODAL SUPERVISORAS
