@@ -374,12 +374,12 @@ async function carregarDados() {
     document.getElementById('mes-label-dash').textContent = mesLabel;
 
     setStatus('<i class="ti ti-loader"></i> Buscando pedidos e vendas...', 'loading');
-    const [pedidosAbertos, pedidosMes, vendasMes] = await Promise.all([
+    const [pedidosAbertos, pedidosMes, pedidosBaixadosMes, vendasMes] = await Promise.all([
       buscarTodas('/pedido?status=1'),
       buscarTodas('/pedido?data_criacao_inicial=' + dataIni + '&data_criacao_final=' + dataFim),
+      buscarTodas('/pedido?status=2'),
       buscarTodas('/venda?data_criacao_inicial=' + dataIni + '&data_criacao_final=' + dataFim)
     ]);
-
     // Kit bipado + data acerto
     const temKitAberto = {};
     const dataAcertoPorRev = {};
@@ -443,7 +443,7 @@ async function carregarDados() {
     });
 
     // Dados para dashboard
-    dashData = { pedidosAbertos, pedidosMes, vendasMes, apenasConsultoras };
+    dashData = { pedidosAbertos, pedidosMes, pedidosBaixadosMes, vendasMes, apenasConsultoras };
 
     document.getElementById('setup-wrap').style.display = 'none';
     document.getElementById('sidebar').style.display = 'flex';
@@ -592,15 +592,17 @@ function renderKanban() {
 // DASHBOARD
 function renderDashboard() {
   if (!dashData) return;
-  const { pedidosAbertos, pedidosMes, vendasMes, apenasConsultoras } = dashData;
+  const { pedidosAbertos, pedidosMes, pedidosBaixadosMes, vendasMes, apenasConsultoras } = dashData;
 
-  // --- BAIXADOS: pedidos com baixa confirmada no mês ---
+  // --- BAIXADOS: pedidos com baixa confirmada no mês atual (filtra por data_baixa) ---
   const baixadosPorSup = {};
   const baixadosLinhas = [];
   SUPERVISORAS.forEach(s => baixadosPorSup[s.nome] = 0);
 
-  pedidosMes.forEach(p => {
+  pedidosBaixadosMes.forEach(p => {
     if (p.status !== 'Baixado') return;
+    // Filtra somente baixas ocorridas no mês atual
+    if (!dataNoMesAtual(p.data_baixa)) return;
     const val = parseFloat(p.valor_total || 0);
     if (val <= 0) return;
     const rid = p.fk_revendedor_id;
@@ -609,7 +611,7 @@ function renderDashboard() {
     const sup = supObj ? supObj.nome : 'Sem supervisora';
     if (baixadosPorSup[sup] !== undefined) baixadosPorSup[sup] += val;
     const cons = apenasConsultoras.find(r => r.id === rid);
-    baixadosLinhas.push({ nome: cons ? cons.nome : 'Consultora #' + rid, sup, data: p.data_baixa || p.data_acerto, val });
+    baixadosLinhas.push({ nome: cons ? cons.nome : 'Consultora #' + rid, sup, data: p.data_baixa, val });
   });
 
   const totalBaixados = Object.values(baixadosPorSup).reduce((a,b) => a+b, 0);
