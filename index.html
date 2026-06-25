@@ -360,8 +360,15 @@ async function iniciarCarregamento() {
 async function carregarDados() {
   try {
     setStatus('<i class="ti ti-loader"></i> Buscando consultoras...', 'loading');
-    const revendedores = await buscarTodas('/revendedor?status=1');
-    const apenasConsultoras = revendedores.filter(r => r.fk_tipo_revendedor_id === 2);
+
+    // Busca TODOS os revendedores (ativos e inativos) para não perder baixados de inativas
+    const [revendedoresAtivos, revendedoresTodos] = await Promise.all([
+      buscarTodas('/revendedor?status=1'),
+      buscarTodas('/revendedor')
+    ]);
+
+    const consultorAsAtivas = revendedoresAtivos.filter(r => r.fk_tipo_revendedor_id === 2);
+    const todasConsultoras = revendedoresTodos.filter(r => r.fk_tipo_revendedor_id === 2);
 
     const hoje = new Date();
     const ano = hoje.getFullYear();
@@ -374,13 +381,17 @@ async function carregarDados() {
     document.getElementById('mes-label-dash').textContent = mesLabel;
 
     setStatus('<i class="ti ti-loader"></i> Buscando pedidos e vendas...', 'loading');
+
+    // Busca pedidos abertos, pedidos do mês (para kanban/pré-baixa), 
+    // pedidos baixados do mês (por data_baixa), e vendas do mês
     const [pedidosAbertos, pedidosMes, pedidosBaixadosMes, vendasMes] = await Promise.all([
       buscarTodas('/pedido?status=1'),
       buscarTodas('/pedido?data_criacao_inicial=' + dataIni + '&data_criacao_final=' + dataFim),
       buscarTodas('/pedido?status=2'),
-      buscarTodas('/venda?data_criacao_inicial=' + dataIni + '&data_criacao_final=' + dataFim)
+      buscarTodas('/venda?data_criacao_inicial=' + dataIni + '&data_criacao_final=' + dataFim + '&status=1') // só vendas concluídas
     ]);
-    // Kit bipado + data acerto
+
+    // Kit bipado + data acerto (só consultoras ativas para o Kanban)
     const temKitAberto = {};
     const dataAcertoPorRev = {};
     pedidosAbertos.forEach(p => {
@@ -389,18 +400,21 @@ async function carregarDados() {
       if (p.data_acerto) dataAcertoPorRev[p.fk_revendedor_id] = p.data_acerto;
     });
 
-    // Vendas compras diretas por consultora (em /venda)
+    // Compras diretas por consultora ativa via /venda
     const comprasDiretasPorRev = {};
     vendasMes.forEach(v => {
       if (!v.comprador) return;
       const nomeComprador = v.comprador.nome || '';
-      const c = apenasConsultoras.find(r => r.nome === nomeComprador);
+      // Exclui vendas da Débora das compras diretas
+      const vendedor = v.vendedor || '';
+      if (vendedor.includes(DEBORA_JUERI)) return;
+      const c = consultorAsAtivas.find(r => r.nome === nomeComprador);
       if (c) {
         comprasDiretasPorRev[c.id] = (comprasDiretasPorRev[c.id] || 0) + parseFloat(v.valor_total || 0);
       }
     });
 
-    // Vendas pré-baixa dos pedidos do mês
+    // Vendas/pré-baixa dos pedidos do mês para o Kanban
     const vendasPorRev = {};
     pedidosMes.forEach(p => {
       const rid = p.fk_revendedor_id;
@@ -431,7 +445,8 @@ async function carregarDados() {
       selNivel.appendChild(o);
     });
 
-    consultoras = apenasConsultoras.map(r => {
+    // Monta consultoras ATIVAS para o Kanban
+    consultoras = consultorAsAtivas.map(r => {
       const nome = r.nome || 'Consultora';
       const sup = supManual[r.id] || 'Sem supervisora';
       const vendas = vendasPorRev[r.id] || 0;
@@ -442,8 +457,8 @@ async function carregarDados() {
       return { id: r.id, nome, sup, vendas, comprasDiretas, temKit, nivel, telefone: r.telefone_1 || r.telefone_2 || '', dataAcerto };
     });
 
-    // Dados para dashboard
-    dashData = { pedidosAbertos, pedidosMes, pedidosBaixadosMes, vendasMes, apenasConsultoras };
+    // Dados para dashboard — passa TODAS as consultoras (ativas + inativas)
+    dashData = { pedidosAbertos, pedidosMes, pedidosBaixadosMes, vendasMes, todasConsultoras, consultorAsAtivas };
 
     document.getElementById('setup-wrap').style.display = 'none';
     document.getElementById('sidebar').style.display = 'flex';
@@ -592,26 +607,29 @@ function renderKanban() {
 // DASHBOARD
 function renderDashboard() {
   if (!dashData) return;
-  const { pedidosAbertos, pedidosMes, pedidosBaixadosMes, vendasMes, apenasConsultoras } = dashData;
+  const { pedidosAbertos, pedidosMes, pedidosBaixadosMes, vendasMes, todasConsultoras } = dashData;
+
+  // Mapa de id → nome para todas as consultoras (ativas + inativas)
+  const todasConsultorasMap = {};
+  todasConsultoras.forEach(r => { todasConsultorasMap[r.id] = r.nome || 'Consultora #' + r.id; });
 
   // --- BAIXADOS: pedidos com baixa confirmada no mês atual (filtra por data_baixa) ---
-  const baixadosPorSup = {};
+  const baixadosPorSup = { 'outros': 0 };
   const baixadosLinhas = [];
   SUPERVISORAS.forEach(s => baixadosPorSup[s.nome] = 0);
 
   pedidosBaixadosMes.forEach(p => {
     if (p.status !== 'Baixado') return;
-    // Filtra somente baixas ocorridas no mês atual
     if (!dataNoMesAtual(p.data_baixa)) return;
     const val = parseFloat(p.valor_total || 0);
     if (val <= 0) return;
     const rid = p.fk_revendedor_id;
     const supNome = rid ? supManual[rid] : null;
     const supObj = supNome ? SUPERVISORAS.find(s => s.nome === supNome) : null;
-    const sup = supObj ? supObj.nome : 'Sem supervisora';
-    if (baixadosPorSup[sup] !== undefined) baixadosPorSup[sup] += val;
-    const cons = apenasConsultoras.find(r => r.id === rid);
-    baixadosLinhas.push({ nome: cons ? cons.nome : 'Consultora #' + rid, sup, data: p.data_baixa, val });
+    const sup = supObj ? supObj.nome : 'outros';
+    baixadosPorSup[sup] = (baixadosPorSup[sup] || 0) + val;
+    const nomeConsultora = todasConsultorasMap[rid] || 'Consultora #' + rid;
+    baixadosLinhas.push({ nome: nomeConsultora, sup: supObj ? supObj.nome : 'Inativa / Sem supervisora', data: p.data_baixa, val });
   });
 
   const totalBaixados = Object.values(baixadosPorSup).reduce((a,b) => a+b, 0);
@@ -623,15 +641,19 @@ function renderDashboard() {
     const style = SUP_COLORS[i % SUP_COLORS.length];
     gridBX.innerHTML += `<div class="dash-card"><div class="dash-card-label">Supervisora</div><div class="dash-card-name" style="color:${style.color}">${s.nome}</div><div class="dash-card-value">${fmtBRL(val)}</div><div class="dash-card-sub">em pedidos baixados</div></div>`;
   });
+  if (baixadosPorSup['outros'] > 0) {
+    gridBX.innerHTML += `<div class="dash-card" style="border-color:#ddd"><div class="dash-card-label">Inativas / Sem supervisora</div><div class="dash-card-name" style="color:#888">Outras</div><div class="dash-card-value" style="color:#888">${fmtBRL(baixadosPorSup['outros'])}</div><div class="dash-card-sub">não atribuídas</div></div>`;
+  }
   gridBX.innerHTML += `<div class="dash-card destaque"><div class="dash-card-label">Total geral</div><div class="dash-card-name">Cianita Semijoias</div><div class="dash-card-value">${fmtBRL(totalBaixados)}</div><div class="dash-card-sub">baixados consolidados</div></div>`;
 
   const tbodyBX = document.getElementById('tbody-baixados');
-  tbodyBX.innerHTML = baixadosLinhas.sort((a,b) => b.val - a.val).map(l => `
-    <tr><td>${l.nome}</td><td><span style="font-size:11px;font-weight:600;padding:1px 6px;border-radius:20px;background:${(supColorMap[l.sup]||{bg:'#f5ede9'}).bg};color:${(supColorMap[l.sup]||{color:'#7a5c3a'}).color}">${l.sup}</span></td><td>${fmtData(l.data)}</td><td style="text-align:right;font-weight:600">${fmtBRL(l.val)}</td></tr>`
-  ).join('') || '<tr><td colspan="4" style="text-align:center;color:#bbb;padding:1.5rem">Nenhum pedido baixado este mês</td></tr>';
+  tbodyBX.innerHTML = baixadosLinhas.sort((a,b) => b.val - a.val).map(l => {
+    const sStyle = supColorMap[l.sup] || {bg:'#f0f0f0', color:'#888'};
+    return `<tr><td>${l.nome}</td><td><span style="font-size:11px;font-weight:600;padding:1px 6px;border-radius:20px;background:${sStyle.bg};color:${sStyle.color}">${l.sup}</span></td><td>${fmtData(l.data)}</td><td style="text-align:right;font-weight:600">${fmtBRL(l.val)}</td></tr>`;
+  }).join('') || '<tr><td colspan="4" style="text-align:center;color:#bbb;padding:1.5rem">Nenhum pedido baixado este mês</td></tr>';
 
   // --- PRÉ-BAIXA: pedidos abertos com acerto no mês atual ---
-  const prebaixaPorSup = {};
+  const prebaixaPorSup = { 'outros': 0 };
   const prebaixaLinhas = [];
   SUPERVISORAS.forEach(s => prebaixaPorSup[s.nome] = 0);
 
@@ -642,12 +664,12 @@ function renderDashboard() {
     const rid = p.fk_revendedor_id;
     const supNome = rid ? supManual[rid] : null;
     const supObj = supNome ? SUPERVISORAS.find(s => s.nome === supNome) : null;
-    const sup = supObj ? supObj.nome : 'Sem supervisora';
-    if (prebaixaPorSup[sup] !== undefined) prebaixaPorSup[sup] += val;
-    const cons = apenasConsultoras.find(r => r.id === rid);
+    const sup = supObj ? supObj.nome : 'outros';
+    prebaixaPorSup[sup] = (prebaixaPorSup[sup] || 0) + val;
+    const nomeConsultora = todasConsultorasMap[rid] || 'Consultora #' + rid;
     prebaixaLinhas.push({
-      nome: cons ? cons.nome : 'Consultora #' + rid,
-      sup,
+      nome: nomeConsultora,
+      sup: supObj ? supObj.nome : 'Sem supervisora',
       acerto: p.data_acerto,
       val
     });
@@ -668,6 +690,9 @@ function renderDashboard() {
         <div class="dash-card-sub">pré-baixa do mês</div>
       </div>`;
   });
+  if (prebaixaPorSup['outros'] > 0) {
+    gridPB.innerHTML += `<div class="dash-card" style="border-color:#ddd"><div class="dash-card-label">Sem supervisora</div><div class="dash-card-name" style="color:#888">Outras</div><div class="dash-card-value" style="color:#888">${fmtBRL(prebaixaPorSup['outros'])}</div><div class="dash-card-sub">não atribuídas</div></div>`;
+  }
   gridPB.innerHTML += `
     <div class="dash-card destaque">
       <div class="dash-card-label">Total geral</div>
@@ -677,21 +702,25 @@ function renderDashboard() {
     </div>`;
 
   const tbodyPB = document.getElementById('tbody-prebaixa');
-  tbodyPB.innerHTML = prebaixaLinhas.sort((a,b) => b.val - a.val).map(l => `
-    <tr>
+  tbodyPB.innerHTML = prebaixaLinhas.sort((a,b) => b.val - a.val).map(l => {
+    const sStyle = supColorMap[l.sup] || {bg:'#f0f0f0', color:'#888'};
+    return `<tr>
       <td>${l.nome}</td>
-      <td><span style="font-size:11px;font-weight:600;padding:1px 6px;border-radius:20px;background:${(supColorMap[l.sup]||{bg:'#f5ede9'}).bg};color:${(supColorMap[l.sup]||{color:'#7a5c3a'}).color}">${l.sup}</span></td>
+      <td><span style="font-size:11px;font-weight:600;padding:1px 6px;border-radius:20px;background:${sStyle.bg};color:${sStyle.color}">${l.sup}</span></td>
       <td>${fmtData(l.acerto)}</td>
       <td style="text-align:right;font-weight:600">${fmtBRL(l.val)}</td>
-    </tr>`).join('') || '<tr><td colspan="4" style="text-align:center;color:#bbb;padding:1.5rem">Nenhum acerto previsto para este mês</td></tr>';
+    </tr>`;
+  }).join('') || '<tr><td colspan="4" style="text-align:center;color:#bbb;padding:1.5rem">Nenhum acerto previsto para este mês</td></tr>';
 
-  // --- VENDAS: /venda do mês ---
+  // --- VENDAS: /venda do mês --- somente status Vendido (não cancelado)
   const vendasPorSup = {};
   SUPERVISORAS.forEach(s => vendasPorSup[s.nome] = 0);
   let vendasDebora = 0;
   const vendasLinhas = [];
 
   vendasMes.forEach(v => {
+    // Ignora vendas canceladas
+    if (v.status === 'Cancelado') return;
     const vendedor = v.vendedor || '';
     const val = parseFloat(v.valor_total || 0);
     const comprador = v.comprador ? v.comprador.nome : '-';
@@ -766,6 +795,13 @@ function renderDashboard() {
         <div class="dash-card-sub">Baixados ${fmtBRL(bx)} · Vendas ${fmtBRL(vd)}</div>
       </div>`;
   });
+
+  const outrosBX = baixadosPorSup['outros'] || 0;
+  if (outrosBX > 0) {
+    totalGeral += outrosBX;
+    gridC.innerHTML += `<div class="dash-card" style="border-color:#ddd"><div class="dash-card-label">Inativas / Sem supervisora</div><div class="dash-card-name" style="color:#888">Outras</div><div class="dash-card-value" style="color:#888">${fmtBRL(outrosBX)}</div><div class="dash-card-sub">baixados não atribuídos</div></div>`;
+  }
+
   gridC.innerHTML += `
     <div class="dash-card" style="border-color:#b5906b">
       <div class="dash-card-label">Loja física</div>
@@ -780,6 +816,7 @@ function renderDashboard() {
       <div class="dash-card-sub">baixados + vendas do mês</div>
     </div>`;
 
+  const totalVendasSup = Object.values(vendasPorSup).reduce((a,b) => a+b, 0);
   const tbodyC = document.getElementById('tbody-consolidado');
   tbodyC.innerHTML = SUPERVISORAS.map((s,i) => {
     const bx = baixadosPorSup[s.nome] || 0;
@@ -791,8 +828,9 @@ function renderDashboard() {
       <td style="text-align:right">${fmtBRL(vd)}</td>
       <td style="text-align:right;font-weight:600">${fmtBRL(bx+vd)}</td>
     </tr>`;
-  }).join('') + `
-    <tr style="background:#fdf6f4">
+  }).join('')
+  + (outrosBX > 0 ? `<tr style="background:#f9f9f9"><td><span style="font-size:11px;font-weight:600;padding:1px 6px;border-radius:20px;background:#f0f0f0;color:#888">Inativas / Sem sup.</span></td><td style="text-align:right">${fmtBRL(outrosBX)}</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600">${fmtBRL(outrosBX)}</td></tr>` : '')
+  + `<tr style="background:#fdf6f4">
       <td><span style="font-size:11px;font-weight:600;padding:1px 6px;border-radius:20px;background:#fdf0e8;color:#b5906b">Débora</span></td>
       <td style="text-align:right">—</td>
       <td style="text-align:right">${fmtBRL(vendasDebora)}</td>
@@ -801,8 +839,8 @@ function renderDashboard() {
     <tr style="font-weight:600;background:#f9f1ee">
       <td>Total</td>
       <td style="text-align:right">${fmtBRL(totalBaixados)}</td>
-      <td style="text-align:right">${fmtBRL(Object.values(vendasPorSup).reduce((a,b)=>a+b,0)+vendasDebora)}</td>
-      <td style="text-align:right">${fmtBRL(totalGeral+vendasDebora)}</td>
+      <td style="text-align:right">${fmtBRL(totalVendasSup + vendasDebora)}</td>
+      <td style="text-align:right">${fmtBRL(totalGeral + vendasDebora)}</td>
     </tr>`;
 }
 
