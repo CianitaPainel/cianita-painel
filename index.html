@@ -9,16 +9,22 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;font-size:13px;color:#1a1a1a;background:#fdf6f4;min-height:100vh}
-.topbar{background:#fff;border-bottom:1px solid #f0e4df;padding:0 1.5rem;display:flex;align-items:center;gap:12px;height:56px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(181,144,107,0.06)}
-.topbar-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;letter-spacing:2px;color:#1a1a1a;margin-right:auto;text-transform:uppercase}
-.topbar-logo span{font-weight:400;font-size:13px;letter-spacing:3px;color:#b5906b;display:block;line-height:1;font-family:'Inter',sans-serif;text-transform:uppercase}
+.topbar{background:#fff;border-bottom:1px solid #f0e4df;padding:0 1.5rem;display:flex;align-items:center;gap:10px;height:56px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(181,144,107,0.06);flex-wrap:wrap}
+.topbar-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;letter-spacing:2px;color:#1a1a1a;text-transform:uppercase;white-space:nowrap}
+.topbar-logo span{font-weight:400;font-size:11px;letter-spacing:3px;color:#b5906b;display:block;line-height:1;font-family:'Inter',sans-serif;text-transform:uppercase}
 select,input,textarea,button{font-family:'Inter',sans-serif;font-size:13px}
 select{padding:6px 10px;border-radius:8px;border:1px solid #e8d8d0;background:#fff;color:#1a1a1a;cursor:pointer}
+.search-input{padding:6px 10px 6px 30px;border-radius:8px;border:1px solid #e8d8d0;background:#fff;color:#1a1a1a;width:180px}
+.search-input:focus{outline:none;border-color:#b5906b}
+.search-wrap{position:relative;display:flex;align-items:center}
+.search-wrap i{position:absolute;left:8px;color:#b5906b;font-size:14px}
 .btn{padding:7px 14px;border-radius:8px;border:1px solid #e8d8d0;background:#fff;cursor:pointer;font-size:12px;color:#666;display:inline-flex;align-items:center;gap:5px}
 .btn:hover{background:#fdf6f4}
 .btn-primary{border-color:#b5906b;background:#fdf0e8;color:#7a5c3a}
-.btn-connect{background:#1a1a1a;color:#fff;border-color:#1a1a1a;padding:9px 24px;font-size:13px;font-weight:500;border-radius:8px;letter-spacing:0.5px}
+.btn-connect{background:#1a1a1a;color:#fff;border-color:#1a1a1a;padding:9px 24px;font-size:13px;font-weight:500;border-radius:8px}
 .btn-connect:hover{background:#333}
+.btn-sup{border-color:#b5906b;background:#fff;color:#b5906b;font-size:12px;padding:5px 10px}
+.btn-sup:hover{background:#fdf0e8}
 .main{padding:1.5rem}
 .setup-wrap{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 56px)}
 .setup-card{background:#fff;border:1px solid #f0e4df;border-radius:16px;padding:2.5rem;width:100%;max-width:460px;box-shadow:0 4px 24px rgba(181,144,107,0.08)}
@@ -31,29 +37,32 @@ select{padding:6px 10px;border-radius:8px;border:1px solid #e8d8d0;background:#f
 .status-bar{font-size:12px;margin-top:12px;padding:10px 14px;border-radius:8px;display:none;line-height:1.5}
 .status-loading{background:#fdf0e8;color:#7a5c3a;display:block}
 .status-error{background:#fcebeb;color:#a32d2d;display:block}
-.toolbar{display:flex;gap:8px;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap}
-.toolbar-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;letter-spacing:1px;margin-right:auto;color:#1a1a1a}
-.toolbar-title span{font-size:12px;font-weight:400;color:#b5906b;margin-left:8px;font-family:'Inter',sans-serif;letter-spacing:0}
+.toolbar{display:flex;gap:8px;align-items:center;margin-bottom:1rem;flex-wrap:wrap}
+.toolbar-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;letter-spacing:1px;margin-right:auto;color:#1a1a1a;white-space:nowrap}
+.toolbar-title span{font-size:12px;font-weight:400;color:#b5906b;margin-left:8px;font-family:'Inter',sans-serif}
 .kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:start}
 @media(max-width:900px){.kanban{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.kanban{grid-template-columns:1fr}}
 .col{background:#f9f1ee;border-radius:14px;padding:12px}
 .col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;padding-bottom:8px;border-bottom:1px solid rgba(181,144,107,0.15)}
-.col-title{font-weight:600;font-size:12px;letter-spacing:0.3px;text-transform:uppercase;color:#555}
+.col-title{font-weight:600;font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:#888}
 .col-count{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
 .col-hint{font-size:10px;color:#b5906b;margin-bottom:10px;line-height:1.4}
 .card{background:#fff;border:1px solid #f0e4df;border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:all 0.15s}
 .card:hover{border-color:#b5906b;box-shadow:0 2px 8px rgba(181,144,107,0.1)}
 .card:last-child{margin-bottom:0}
 .card-name{font-weight:600;font-size:12px;margin-bottom:5px;color:#1a1a1a}
-.card-alert{font-size:10px;margin-top:7px;padding:5px 8px;border-left:2px solid;border-radius:0 6px 6px 0}
+.card-alert{font-size:10px;margin-top:6px;padding:4px 8px;border-left:2px solid;border-radius:0 6px 6px 0}
 .card-alert-warn{background:#faeeda;color:#854f0b;border-color:#ef9f27}
 .card-alert-danger{background:#fcebeb;color:#a32d2d;border-color:#e24b4a}
 .nivel-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px}
-.obs-dot{width:7px;height:7px;border-radius:50%;background:#b5906b;flex-shrink:0}
+.obs-dot{width:6px;height:6px;border-radius:50%;background:#b5906b;flex-shrink:0}
+.acerto-chip{font-size:10px;color:#7a5c3a;background:#fdf0e8;padding:2px 6px;border-radius:20px;display:inline-flex;align-items:center;gap:3px}
+.acerto-chip.vencido{color:#a32d2d;background:#fcebeb}
+.acerto-chip.hoje{color:#3b6d11;background:#eaf3de}
 .overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.35);z-index:200;align-items:center;justify-content:center;padding:1rem}
 .overlay.open{display:flex}
-.modal{background:#fff;border-radius:16px;padding:1.5rem;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,0.15)}
+.modal{background:#fff;border-radius:16px;padding:1.5rem;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,0.15)}
 .modal-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid #f0e4df}
 .avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
 textarea{width:100%;padding:9px 12px;border-radius:8px;border:1px solid #e8d8d0;color:#1a1a1a;resize:vertical;min-height:64px;line-height:1.5;font-family:'Inter',sans-serif;font-size:13px;background:#fdf9f7}
@@ -74,6 +83,17 @@ textarea:focus{outline:none;border-color:#b5906b}
 .investig-danger{border-color:#e24b4a;background:#fcebeb;color:#a32d2d}
 .empty-col{font-size:11px;color:#c9a898;text-align:center;padding:16px 0}
 .topbar-controls{display:none;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* Modal supervisoras */
+.sup-modal{background:#fff;border-radius:16px;padding:1.5rem;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,0.15)}
+.sup-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;margin-bottom:4px}
+.sup-sub{font-size:12px;color:#999;margin-bottom:1rem;line-height:1.5}
+.sup-consultora-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f5ede9;gap:8px}
+.sup-consultora-item:last-child{border-bottom:none}
+.sup-select{padding:5px 8px;border-radius:8px;border:1px solid #e8d8d0;font-size:12px;flex:1;max-width:200px}
+.badge-contato{font-size:10px;padding:2px 6px;border-radius:20px;font-weight:500}
+.badge-com-contato{background:#eaf3de;color:#3b6d11}
+.badge-sem-contato{background:#fcebeb;color:#a32d2d}
 </style>
 </head>
 <body>
@@ -81,12 +101,23 @@ textarea:focus{outline:none;border-color:#b5906b}
 <div class="topbar">
   <div class="topbar-logo">Cianita<span>Semijoias</span></div>
   <div class="topbar-controls" id="topbar-controls">
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+      <input type="text" class="search-input" id="busca-nome" placeholder="Buscar consultora..." oninput="renderKanban()">
+    </div>
     <select id="filtro-sup" onchange="renderKanban()">
       <option value="todas">Todas as supervisoras</option>
+      <option value="sem">Sem supervisora</option>
     </select>
     <select id="filtro-nivel" onchange="renderKanban()">
       <option value="todos">Todos os níveis</option>
     </select>
+    <select id="filtro-contato" onchange="renderKanban()">
+      <option value="todos">Todos os contatos</option>
+      <option value="com">Com contato no mês</option>
+      <option value="sem">Sem contato no mês</option>
+    </select>
+    <button class="btn btn-sup" onclick="abrirModalSupervisoras()"><i class="ti ti-users"></i> Supervisoras</button>
     <button class="btn" onclick="recarregar()"><i class="ti ti-refresh"></i> Atualizar</button>
     <button class="btn" onclick="sair()"><i class="ti ti-logout"></i> Sair</button>
   </div>
@@ -114,8 +145,14 @@ textarea:focus{outline:none;border-color:#b5906b}
   </div>
 </div>
 
+<!-- Overlay consultora -->
 <div class="overlay" id="overlay" onclick="fecharModal(event)">
   <div class="modal" id="modal" onclick="event.stopPropagation()"></div>
+</div>
+
+<!-- Overlay supervisoras -->
+<div class="overlay" id="overlay-sup" onclick="fecharModalSup(event)">
+  <div class="sup-modal" id="modal-sup" onclick="event.stopPropagation()"></div>
 </div>
 
 <script>
@@ -139,21 +176,25 @@ const SUP_COLORS = [
 const AVATAR_BG  = ['#f5d5c8','#f4c0d1','#fac775','#c0dd97','#b5d4f4','#cecbf6','#9fe1cb','#f0997b'];
 const AVATAR_CLR = ['#7a2e1a','#72243e','#633806','#27500a','#0c447c','#3c3489','#085041','#993c1d'];
 const COLUNAS = [
-  {id:'zerada',         label:'Zeradas',           hint:'Kit bipado, sem vendas no mês.',                                          countBg:'#fcebeb',countClr:'#a32d2d'},
-  {id:'abaixo',         label:'Abaixo de R$ 500',  hint:'Abaixo do mínimo — frete por conta delas.',                              countBg:'#faeeda',countClr:'#854f0b'},
-  {id:'acima',          label:'Acima de R$ 500',   hint:'Operação regular dentro do consignado.',                                  countBg:'#eaf3de',countClr:'#3b6d11'},
-  {id:'sem-mostruario', label:'Sem kit separado',  hint:'Kit não bipado — investigar com supervisora.',                           countBg:'#f5ede9',countClr:'#7a5c3a'},
+  {id:'zerada',         label:'Zeradas',           hint:'Kit bipado, sem vendas no mês.',               countBg:'#fcebeb',countClr:'#a32d2d'},
+  {id:'abaixo',         label:'Abaixo de R$ 500',  hint:'Abaixo do mínimo — frete por conta delas.',    countBg:'#faeeda',countClr:'#854f0b'},
+  {id:'acima',          label:'Acima de R$ 500',   hint:'Operação regular dentro do consignado.',        countBg:'#eaf3de',countClr:'#3b6d11'},
+  {id:'sem-mostruario', label:'Sem kit separado',  hint:'Kit não bipado — investigar com supervisora.', countBg:'#f5ede9',countClr:'#7a5c3a'},
 ];
+
+const SUPERVISORAS_FIXAS = ['Maria Fernanda', 'Cinthia', 'Gabrielly'];
 
 let TOKEN = '';
 let consultoras = [];
-let supervisoras = [];
 let supColorMap = {};
 let obsLocal = JSON.parse(localStorage.getItem('cianita_obs') || '{}');
 let acoesLocal = JSON.parse(localStorage.getItem('cianita_acoes') || '{}');
+// Mapa manual de supervisoras: { consultora_id: 'Nome Supervisora' }
+let supManual = JSON.parse(localStorage.getItem('cianita_sup') || '{}');
 
 function salvarObsStorage() { localStorage.setItem('cianita_obs', JSON.stringify(obsLocal)); }
 function salvarAcoesStorage() { localStorage.setItem('cianita_acoes', JSON.stringify(acoesLocal)); }
+function salvarSupManual() { localStorage.setItem('cianita_sup', JSON.stringify(supManual)); }
 
 function setStatus(msg, tipo) {
   const el = document.getElementById('status-bar');
@@ -202,20 +243,9 @@ async function iniciarCarregamento() {
 async function carregarDados() {
   try {
     setStatus('<i class="ti ti-loader"></i> Buscando consultoras...', 'loading');
-
-    // Busca todos revendedores ativos
     const revendedores = await buscarTodas('/revendedor?status=1');
-
-    // Separa gerentes (supervisoras) e consultoras
-    const gerentesMap = {};
-    revendedores.forEach(r => {
-      if (r.fk_tipo_revendedor_id === 1) {
-        gerentesMap[r.id] = r.nome || 'Supervisora';
-      }
-    });
     const apenasConsultoras = revendedores.filter(r => r.fk_tipo_revendedor_id === 2);
 
-    // Data do mês
     const hoje = new Date();
     const ano = hoje.getFullYear();
     const mes = String(hoje.getMonth() + 1).padStart(2, '0');
@@ -225,25 +255,25 @@ async function carregarDados() {
     document.getElementById('mes-label').textContent = '· ' + hoje.toLocaleString('pt-BR', {month:'long', year:'numeric'});
 
     setStatus('<i class="ti ti-loader"></i> Buscando pedidos...', 'loading');
-
     const [pedidosAbertos, pedidosMes] = await Promise.all([
       buscarTodas('/pedido?status=1'),
       buscarTodas('/pedido?data_criacao_inicial=' + dataIni + '&data_criacao_final=' + dataFim)
     ]);
 
-    // Kit bipado = tem pedido Aberto
+    // Kit bipado + data de acerto
     const temKitAberto = {};
+    const dataAcertoPorRev = {};
     pedidosAbertos.forEach(p => {
-      if (p.fk_revendedor_id) temKitAberto[p.fk_revendedor_id] = true;
+      if (!p.fk_revendedor_id) return;
+      temKitAberto[p.fk_revendedor_id] = true;
+      if (p.data_acerto) dataAcertoPorRev[p.fk_revendedor_id] = p.data_acerto;
     });
 
-    // Vendas e supervisora dos pedidos do mês
+    // Vendas do mês
     const vendasPorRev = {};
-    const supPorRev = {};
     pedidosMes.forEach(p => {
       const rid = p.fk_revendedor_id;
       if (!rid) return;
-      if (p.supervisor_nome) supPorRev[rid] = p.supervisor_nome;
       if (p.status === 'Aberto') {
         const val = parseFloat(p.valor_pre_baixa || 0);
         if (val > 0) vendasPorRev[rid] = (vendasPorRev[rid] || 0) + val;
@@ -253,31 +283,14 @@ async function carregarDados() {
       }
     });
 
-    // Monta consultoras — supervisora vem do pedido OU do fk_revendedor_gerente_id
-    consultoras = apenasConsultoras.map(r => {
-      const nome = r.nome || 'Consultora';
-      // Tenta supervisora pelo pedido primeiro, depois pelo cadastro
-      let sup = supPorRev[r.id];
-      if (!sup && r.fk_revendedor_gerente_id) {
-        sup = gerentesMap[r.fk_revendedor_gerente_id] || null;
-      }
-      if (!sup) sup = 'Sem supervisora';
-      const vendas = vendasPorRev[r.id] || 0;
-      const temKit = !!temKitAberto[r.id];
-      const nivel = (r.level_revendedor || 'BRONZE').toUpperCase();
-      return { id: r.id, nome, sup, vendas, temKit, nivel, telefone: r.telefone_1 || r.telefone_2 || '' };
-    });
-
-    // Supervisoras únicas
-    supervisoras = [...new Set(consultoras.map(c => c.sup).filter(s => s !== 'Sem supervisora'))].sort();
-    supervisoras.forEach((s, i) => { supColorMap[s] = SUP_COLORS[i % SUP_COLORS.length]; });
-
+    // Popula supervisoras no filtro
     const selSup = document.getElementById('filtro-sup');
-    selSup.innerHTML = '<option value="todas">Todas as supervisoras</option>';
-    supervisoras.forEach(s => {
+    selSup.innerHTML = '<option value="todas">Todas as supervisoras</option><option value="sem">Sem supervisora</option>';
+    SUPERVISORAS_FIXAS.forEach(s => {
       const o = document.createElement('option');
       o.value = s; o.textContent = s;
       selSup.appendChild(o);
+      supColorMap[s] = SUP_COLORS[SUPERVISORAS_FIXAS.indexOf(s) % SUP_COLORS.length];
     });
 
     const selNivel = document.getElementById('filtro-nivel');
@@ -286,6 +299,17 @@ async function carregarDados() {
       const o = document.createElement('option');
       o.value = n; o.textContent = n.charAt(0) + n.slice(1).toLowerCase();
       selNivel.appendChild(o);
+    });
+
+    // Monta consultoras
+    consultoras = apenasConsultoras.map(r => {
+      const nome = r.nome || 'Consultora';
+      const sup = supManual[r.id] || 'Sem supervisora';
+      const vendas = vendasPorRev[r.id] || 0;
+      const temKit = !!temKitAberto[r.id];
+      const nivel = (r.level_revendedor || 'BRONZE').toUpperCase();
+      const dataAcerto = dataAcertoPorRev[r.id] || null;
+      return { id: r.id, nome, sup, vendas, temKit, nivel, telefone: r.telefone_1 || r.telefone_2 || '', dataAcerto };
     });
 
     document.getElementById('setup-wrap').style.display = 'none';
@@ -309,13 +333,51 @@ function coluna(c) {
 function initials(n) { return n.split(' ').slice(0,2).map(x => x[0] || '').join('').toUpperCase(); }
 function fmtBRL(v) { return 'R$ ' + Math.round(v).toLocaleString('pt-BR'); }
 
+function fmtAcerto(dataStr) {
+  if (!dataStr) return null;
+  const d = new Date(dataStr);
+  if (isNaN(d)) return null;
+  const hoje = new Date();
+  hoje.setHours(0,0,0,0);
+  d.setHours(0,0,0,0);
+  const diff = Math.round((d - hoje) / (1000*60*60*24));
+  const label = String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0');
+  if (diff < 0) return {label, cls:'vencido', tip:'Acerto vencido'};
+  if (diff === 0) return {label, cls:'hoje', tip:'Acerto hoje'};
+  return {label, cls:'', tip:'Acerto em ' + diff + ' dias'};
+}
+
+function temContatoMes(id) {
+  const obs = obsLocal[id] || [];
+  const hoje = new Date();
+  const mesAtual = hoje.getMonth();
+  const anoAtual = hoje.getFullYear();
+  return obs.some(o => {
+    if (!o.data) return false;
+    const partes = o.data.split('/');
+    if (partes.length < 3) return false;
+    const m = parseInt(partes[1]) - 1;
+    const a = parseInt(partes[2]);
+    return m === mesAtual && a === anoAtual;
+  });
+}
+
 function renderKanban() {
   const sup = document.getElementById('filtro-sup').value;
   const niv = document.getElementById('filtro-nivel').value;
-  const filtradas = consultoras.filter(c =>
-    (sup === 'todas' || c.sup === sup) &&
-    (niv === 'todos' || c.nivel === niv)
-  );
+  const busca = document.getElementById('busca-nome').value.toLowerCase().trim();
+  const contato = document.getElementById('filtro-contato').value;
+
+  const filtradas = consultoras.filter(c => {
+    if (sup === 'sem' && c.sup !== 'Sem supervisora') return false;
+    if (sup !== 'todas' && sup !== 'sem' && c.sup !== sup) return false;
+    if (niv !== 'todos' && c.nivel !== niv) return false;
+    if (busca && !c.nome.toLowerCase().includes(busca)) return false;
+    if (contato === 'com' && !temContatoMes(c.id)) return false;
+    if (contato === 'sem' && temContatoMes(c.id)) return false;
+    return true;
+  });
+
   const kanban = document.getElementById('kanban');
   kanban.innerHTML = '';
 
@@ -340,6 +402,8 @@ function renderKanban() {
       const vendaSemKit = semKit && c.vendas > 0;
       const temObs = (obsLocal[c.id] || []).length > 0;
       const acoesPend = (acoesLocal[c.id] || []).filter(a => !a.done).length;
+      const acerto = fmtAcerto(c.dataAcerto);
+      const comContato = temContatoMes(c.id);
 
       const card = document.createElement('div');
       card.className = 'card';
@@ -350,15 +414,17 @@ function renderKanban() {
           <div class="avatar" style="width:28px;height:28px;font-size:10px;background:${bg};color:${clr}">${initials(c.nome)}</div>
           <span class="card-name">${c.nome}</span>
         </div>
-        <div style="margin-bottom:5px">
+        <div style="margin-bottom:5px;display:flex;align-items:center;gap:5px;flex-wrap:wrap">
           <span style="background:${sstyle.bg};color:${sstyle.color};padding:1px 6px;border-radius:20px;font-size:10px;font-weight:600">${c.sup}</span>
+          ${acerto ? `<span class="acerto-chip ${acerto.cls}" title="${acerto.tip}"><i class="ti ti-calendar" style="font-size:9px"></i>${acerto.label}</span>` : ''}
         </div>
         ${semKit && !vendaSemKit ? `<div class="card-alert card-alert-warn"><i class="ti ti-alert-triangle"></i> Kit não bipado</div>` : ''}
         ${vendaSemKit ? `<div class="card-alert card-alert-danger"><i class="ti ti-alert-circle"></i> Vendas sem kit registrado</div>` : ''}
         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:7px">
           <span class="nivel-badge" style="background:${nstyle.bg};color:${nstyle.color}">${c.nivel.charAt(0)+c.nivel.slice(1).toLowerCase()}</span>
-          <div style="display:flex;align-items:center;gap:6px">
-            ${temObs ? '<div class="obs-dot"></div>' : ''}
+          <div style="display:flex;align-items:center;gap:5px">
+            ${comContato ? `<span title="Contato registrado este mês" style="font-size:10px;color:#3b6d11">✓</span>` : ''}
+            ${temObs && !comContato ? '<div class="obs-dot"></div>' : ''}
             ${acoesPend > 0 ? `<span style="font-size:10px;color:#854f0b;font-weight:600">${acoesPend} ação</span>` : ''}
             <span style="font-size:11px;font-weight:600;color:${c.vendas===0?'#a32d2d':c.vendas<500?'#854f0b':'#3b6d11'}">${fmtBRL(c.vendas)}</span>
           </div>
@@ -368,6 +434,74 @@ function renderKanban() {
     });
     kanban.appendChild(colEl);
   });
+}
+
+// Modal de atribuição de supervisoras
+function abrirModalSupervisoras() {
+  const modal = document.getElementById('modal-sup');
+  const semSup = consultoras.filter(c => c.sup === 'Sem supervisora');
+  const comSup = consultoras.filter(c => c.sup !== 'Sem supervisora');
+
+  let html = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid #f0e4df">
+      <div>
+        <div class="sup-title">Atribuição de Supervisoras</div>
+        <div class="sup-sub">Defina a supervisora de cada consultora. Salvo automaticamente no navegador.</div>
+      </div>
+      <button class="btn" onclick="fecharModalSup()" style="padding:5px 8px"><i class="ti ti-x"></i></button>
+    </div>
+  `;
+
+  if (semSup.length > 0) {
+    html += `<div style="font-size:11px;font-weight:600;color:#b5906b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Sem supervisora (${semSup.length})</div>`;
+    semSup.forEach(c => {
+      html += `
+        <div class="sup-consultora-item">
+          <span style="font-size:12px;font-weight:500;flex:1">${c.nome}</span>
+          <select class="sup-select" onchange="atribuirSupervisora(${c.id}, this.value)">
+            <option value="">— Selecionar —</option>
+            ${SUPERVISORAS_FIXAS.map(s => `<option value="${s}">${s}</option>`).join('')}
+          </select>
+        </div>
+      `;
+    });
+  }
+
+  if (comSup.length > 0) {
+    html += `<div style="font-size:11px;font-weight:600;color:#b5906b;text-transform:uppercase;letter-spacing:0.5px;margin:16px 0 8px">Com supervisora (${comSup.length})</div>`;
+    comSup.forEach(c => {
+      html += `
+        <div class="sup-consultora-item">
+          <span style="font-size:12px;font-weight:500;flex:1">${c.nome}</span>
+          <select class="sup-select" onchange="atribuirSupervisora(${c.id}, this.value)">
+            <option value="">— Remover —</option>
+            ${SUPERVISORAS_FIXAS.map(s => `<option value="${s}" ${c.sup===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </div>
+      `;
+    });
+  }
+
+  modal.innerHTML = html;
+  document.getElementById('overlay-sup').classList.add('open');
+}
+
+function atribuirSupervisora(id, sup) {
+  if (sup) {
+    supManual[id] = sup;
+  } else {
+    delete supManual[id];
+  }
+  salvarSupManual();
+  const c = consultoras.find(x => x.id === id);
+  if (c) c.sup = sup || 'Sem supervisora';
+  renderKanban();
+}
+
+function fecharModalSup(e) {
+  if (!e || e.target === document.getElementById('overlay-sup')) {
+    document.getElementById('overlay-sup').classList.remove('open');
+  }
 }
 
 function renderAcoes(id) {
@@ -393,6 +527,8 @@ function abrirModal(id) {
   const semKit = col === 'sem-mostruario';
   const vendaSemKit = semKit && c.vendas > 0;
   const obsList = obsLocal[id] || [];
+  const acerto = fmtAcerto(c.dataAcerto);
+  const comContato = temContatoMes(c.id);
 
   let alertaKit = '';
   if (semKit && !vendaSemKit) {
@@ -410,6 +546,7 @@ function abrirModal(id) {
           <span style="background:${sstyle.bg};color:${sstyle.color};padding:1px 7px;border-radius:20px;font-size:10px;font-weight:600">${c.sup}</span>
           <span class="nivel-badge" style="background:${nstyle.bg};color:${nstyle.color}">${c.nivel.charAt(0)+c.nivel.slice(1).toLowerCase()}</span>
           <span style="font-size:10px;color:#b5906b">${colLabel}</span>
+          ${comContato ? `<span class="badge-contato badge-com-contato">✓ Contato este mês</span>` : `<span class="badge-contato badge-sem-contato">Sem contato este mês</span>`}
         </div>
       </div>
       <button class="btn" onclick="fecharModal()" style="padding:5px 8px"><i class="ti ti-x"></i></button>
@@ -424,7 +561,11 @@ function abrirModal(id) {
         <div class="info-cell-label">Kit bipado</div>
         <div class="info-cell-val" style="color:${c.temKit?'#3b6d11':'#a32d2d'}">${c.temKit ? 'Sim' : 'Não'}</div>
       </div>
-      ${c.telefone ? `<div class="info-cell" style="grid-column:1/-1"><div class="info-cell-label">Telefone</div><div class="info-cell-val">${c.telefone}</div></div>` : ''}
+      <div class="info-cell">
+        <div class="info-cell-label">Data de acerto</div>
+        <div class="info-cell-val" style="color:${acerto?(acerto.cls==='vencido'?'#a32d2d':acerto.cls==='hoje'?'#3b6d11':'#1a1a1a'):'#bbb'}">${acerto ? acerto.label : '—'}</div>
+      </div>
+      ${c.telefone ? `<div class="info-cell"><div class="info-cell-label">Telefone</div><div class="info-cell-val" style="font-size:12px">${c.telefone}</div></div>` : ''}
     </div>
     <div class="field-label"><i class="ti ti-notes" style="font-size:12px"></i> Observações de contato</div>
     <div id="obs-list-${id}">
