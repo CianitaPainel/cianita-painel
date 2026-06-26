@@ -450,32 +450,31 @@ async function carregarDados() {
       selNivel.appendChild(o);
     });
 
-    // Contas a receber: somente vencidas até o fim do mês atual, não pagas
+    // Contas a receber: cada registro já é uma parcela individual
+    // Filtra: categoria PEDIDO ou VENDA, vencimento até fim do mês atual
+    // Calcula saldo devedor = valor_cobrado - valor_pago (trata parciais)
     const contasReceberPorRev = {};
+    const fimMes = new Date(ano, hoje.getMonth() + 1, 0);
+    fimMes.setHours(23,59,59,999);
 
-    // DEBUG: loga as primeiras 3 contas para entender a estrutura
-    console.log('CONTAS A RECEBER (primeiras 3):', JSON.stringify(contasReceber.slice(0,3), null, 2));
-
-    contasReceber.forEach(cr => {
-      // parcela pode ser array ou objeto único — normaliza para array
-      const parcelas = cr.parcela
-        ? (Array.isArray(cr.parcela) ? cr.parcela : [cr.parcela])
-        : [];
-      parcelas.forEach(p => {
-        if (p.valor_pago) return;
-        const venc = new Date(p.data_vencimento);
-        if (isNaN(venc)) return;
-        const fimMes = new Date(ano, hoje.getMonth() + 1, 0);
-        if (venc > fimMes) return;
-        const nomeContato = p.contato || '';
-        const rev = consultorAsAtivas.find(r => r.nome === nomeContato);
-        if (rev) {
-          if (!contasReceberPorRev[rev.id]) contasReceberPorRev[rev.id] = { total: 0, vencidos: 0 };
-          const val = parseFloat(p.valor_cobrado || 0);
-          contasReceberPorRev[rev.id].total += val;
-          if (venc < new Date()) contasReceberPorRev[rev.id].vencidos += val;
-        }
-      });
+    contasReceber.forEach(p => {
+      const cat = (p.categoria || '').toUpperCase();
+      if (cat !== 'PEDIDO' && cat !== 'VENDA') return;
+      const cobrado = parseFloat(p.valor_cobrado || 0);
+      const pago = parseFloat(p.valor_pago || 0);
+      const saldo = cobrado - pago;
+      if (saldo <= 0) return; // quitado — ignora
+      const venc = new Date(p.data_vencimento);
+      if (isNaN(venc)) return;
+      if (venc > fimMes) return; // vence em mês futuro — ignora
+      const nomeContato = p.contato || '';
+      const rev = consultorAsAtivas.find(r => r.nome === nomeContato);
+      if (!rev) return;
+      if (!contasReceberPorRev[rev.id]) contasReceberPorRev[rev.id] = { total: 0, vencidos: 0, pedido: 0, venda: 0 };
+      contasReceberPorRev[rev.id].total += saldo;
+      if (cat === 'PEDIDO') contasReceberPorRev[rev.id].pedido += saldo;
+      if (cat === 'VENDA') contasReceberPorRev[rev.id].venda += saldo;
+      if (venc < hoje) contasReceberPorRev[rev.id].vencidos += saldo;
     });
 
     // Monta consultoras ATIVAS para o Kanban
@@ -651,7 +650,7 @@ function renderKanban() {
           <span style="background:${sstyle.bg};color:${sstyle.color};padding:1px 6px;border-radius:20px;font-size:10px;font-weight:600">${c.sup}</span>
           ${acerto ? `<span class="acerto-chip ${acerto.cls}"><i class="ti ti-calendar" style="font-size:9px"></i>${acerto.label}</span>` : ''}
         </div>
-        ${cr && cr.total > 0 ? `<div class="card-alert ${cr.vencidos > 0 ? 'card-alert-danger' : 'card-alert-warn'}"><i class="ti ti-clock"></i> A receber: ${fmtBRL(cr.total)}${cr.vencidos > 0 ? ` · <strong>${fmtBRL(cr.vencidos)} vencido</strong>` : ''}</div>` : ''}
+        ${cr && cr.total > 0 ? `<div class="card-alert ${cr.vencidos > 0 ? 'card-alert-danger' : 'card-alert-warn'}"><i class="ti ti-clock"></i> A receber: ${fmtBRL(cr.total)}${cr.vencidos > 0 ? ` · <strong>${fmtBRL(cr.vencidos)} vencido</strong>` : ''}${cr.pedido > 0 && cr.venda > 0 ? ` (Ped: ${fmtBRL(cr.pedido)} · Vda: ${fmtBRL(cr.venda)})` : ''}</div>` : ''}
         ${semKit && !vendaSemKit ? `<div class="card-alert card-alert-warn"><i class="ti ti-alert-triangle"></i> Kit não bipado</div>` : ''}
         ${vendaSemKit ? `<div class="card-alert card-alert-danger"><i class="ti ti-alert-circle"></i> Vendas sem kit registrado</div>` : ''}
         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:7px">
@@ -1018,7 +1017,11 @@ function abrirModal(id) {
       <button class="btn" onclick="fecharModal()" style="padding:5px 8px"><i class="ti ti-x"></i></button>
     </div>
     ${alertaKit}
-    ${cr && cr.total > 0 ? `<div class="investig-box ${cr.vencidos > 0 ? 'investig-danger' : 'investig-warn'}"><i class="ti ti-clock"></i> <strong>A receber: ${fmtBRL(cr.total)}</strong>${cr.vencidos > 0 ? ` · Vencido: ${fmtBRL(cr.vencidos)}` : ' · Dentro do prazo'}</div>` : ''}
+    ${cr && cr.total > 0 ? `<div class="investig-box ${cr.vencidos > 0 ? 'investig-danger' : 'investig-warn'}">
+      <i class="ti ti-clock"></i> <strong>A receber: ${fmtBRL(cr.total)}</strong>${cr.vencidos > 0 ? ` · Vencido: ${fmtBRL(cr.vencidos)}` : ' · Dentro do prazo'}
+      ${cr.pedido > 0 ? `<div style="margin-top:4px;font-size:11px">Mostruário (Pedido): ${fmtBRL(cr.pedido)}</div>` : ''}
+      ${cr.venda > 0 ? `<div style="font-size:11px">Vendas diretas: ${fmtBRL(cr.venda)}</div>` : ''}
+    </div>` : ''}
     <div class="info-grid">
       <div class="info-cell">
         <div class="info-cell-label">Vendas mostruário</div>
