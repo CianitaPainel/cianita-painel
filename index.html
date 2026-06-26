@@ -450,9 +450,8 @@ async function carregarDados() {
       selNivel.appendChild(o);
     });
 
-    // Contas a receber: cada registro já é uma parcela individual
+    // Contas a receber: pendentes = sem data_pagamento
     // Filtra: categoria PEDIDO ou VENDA, vencimento até fim do mês atual
-    // Calcula saldo devedor = valor_cobrado - valor_pago (trata parciais)
     const contasReceberPorRev = {};
     const fimMes = new Date(ano, hoje.getMonth() + 1, 0);
     fimMes.setHours(23,59,59,999);
@@ -460,21 +459,20 @@ async function carregarDados() {
     contasReceber.forEach(p => {
       const cat = (p.categoria || '').toUpperCase();
       if (cat !== 'PEDIDO' && cat !== 'VENDA') return;
-      const cobrado = parseFloat(p.valor_cobrado || 0);
-      const pago = parseFloat(p.valor_pago || 0);
-      const saldo = cobrado - pago;
-      if (saldo <= 0) return; // quitado — ignora
+      // Já recebida = tem data_pagamento → ignora
+      if (p.data_pagamento) return;
       const venc = new Date(p.data_vencimento);
       if (isNaN(venc)) return;
-      if (venc > fimMes) return; // vence em mês futuro — ignora
+      if (venc > fimMes) return;
       const nomeContato = p.contato || '';
       const rev = consultorAsAtivas.find(r => r.nome === nomeContato);
       if (!rev) return;
       if (!contasReceberPorRev[rev.id]) contasReceberPorRev[rev.id] = { total: 0, vencidos: 0, pedido: 0, venda: 0 };
-      contasReceberPorRev[rev.id].total += saldo;
-      if (cat === 'PEDIDO') contasReceberPorRev[rev.id].pedido += saldo;
-      if (cat === 'VENDA') contasReceberPorRev[rev.id].venda += saldo;
-      if (venc < hoje) contasReceberPorRev[rev.id].vencidos += saldo;
+      const val = parseFloat(p.valor_cobrado || 0);
+      contasReceberPorRev[rev.id].total += val;
+      if (cat === 'PEDIDO') contasReceberPorRev[rev.id].pedido += val;
+      if (cat === 'VENDA') contasReceberPorRev[rev.id].venda += val;
+      if (venc < hoje) contasReceberPorRev[rev.id].vencidos += val;
     });
 
     // Monta consultoras ATIVAS para o Kanban
