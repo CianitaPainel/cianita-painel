@@ -420,6 +420,9 @@ async function carregarDados() {
     const consultorAsAtivas = revendedoresAtivos.filter(r => r.fk_tipo_revendedor_id === 2);
     const todasConsultoras = revendedoresTodos.filter(r => r.fk_tipo_revendedor_id === 2);
 
+    // DEBUG: mostra campos disponíveis no primeiro revendedor
+    if (consultorAsAtivas[0]) console.log('CAMPOS REVENDEDOR:', JSON.stringify(consultorAsAtivas[0], null, 2));
+
     const hoje = new Date();
     const ano = hoje.getFullYear();
     const mes = String(hoje.getMonth() + 1).padStart(2, '0');
