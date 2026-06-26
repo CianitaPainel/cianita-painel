@@ -425,7 +425,7 @@ async function carregarDados() {
       if (vendedor.includes(DEBORA_JUERI)) return;
       const c = consultorAsAtivas.find(r => r.nome === nomeComprador);
       if (c) {
-        comprasDiretasPorRev[c.id] = (comprasDiretasPorRev[c.id] || 0) + parseFloat(v.valor_total || 0);
+        comprasDiretasPorRev[c.id] = (comprasDiretasPorRev[c.id] || 0) + parseFloat(v.valor_final || v.valor_total || 0);
       }
     });
 
@@ -737,7 +737,8 @@ function renderDashboard() {
     // Ignora vendas canceladas
     if (v.status === 'Cancelado') return;
     const vendedor = v.vendedor || '';
-    const val = parseFloat(v.valor_total || 0);
+    // valor_final = valor após desconto, igual ao V. Total exibido no Jueri
+    const val = parseFloat(v.valor_final || v.valor_total || 0);
     const comprador = v.comprador ? v.comprador.nome : '-';
 
     if (vendedor.includes(DEBORA_JUERI)) {
@@ -859,7 +860,7 @@ function renderDashboard() {
     </tr>`;
 
   // --- DIAGNÓSTICO: dados brutos da API para comparação com Jueri ---
-  const totalVendasBruto = vendasMes.reduce((a,v) => a + parseFloat(v.valor_total||0), 0);
+  const totalVendasBruto = vendasMes.reduce((a,v) => a + parseFloat(v.valor_final || v.valor_total||0), 0);
   const baixadosDoMes = pedidosBaixadosMes.filter(p => dataNoMesAtual(p.data_baixa));
   const totalBaixadosBruto = baixadosDoMes.reduce((a,p) => a + parseFloat(p.valor_total||0), 0);
 
@@ -900,7 +901,7 @@ function renderDashboard() {
           <td>${v.vendedor||'-'}</td>
           <td><span style="font-size:10px;padding:1px 5px;border-radius:10px;background:${v.status==='Cancelado'?'#fcebeb':'#eaf3de'};color:${v.status==='Cancelado'?'#a32d2d':'#3b6d11'}">${v.status||'-'}</span></td>
           <td>${fmtData(v.data_criacao)}</td>
-          <td style="text-align:right;font-weight:600">${fmtBRL(v.valor_total||0)}</td>
+          <td style="text-align:right;font-weight:600">${fmtBRL(v.valor_final||v.valor_total||0)}</td>
         </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:#bbb;padding:1.5rem">Nenhuma venda</td></tr>';
     }
 
