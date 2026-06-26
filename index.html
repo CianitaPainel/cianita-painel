@@ -453,8 +453,11 @@ async function carregarDados() {
     // Contas a receber: somente vencidas até o fim do mês atual, não pagas
     const contasReceberPorRev = {};
     contasReceber.forEach(cr => {
-      if (!cr.parcela) return;
-      cr.parcela.forEach(p => {
+      // parcela pode ser array ou objeto único — normaliza para array
+      const parcelas = cr.parcela
+        ? (Array.isArray(cr.parcela) ? cr.parcela : [cr.parcela])
+        : [];
+      parcelas.forEach(p => {
         if (p.valor_pago) return;
         const venc = new Date(p.data_vencimento);
         if (isNaN(venc)) return;
