@@ -452,6 +452,10 @@ async function carregarDados() {
 
     // Contas a receber: somente vencidas até o fim do mês atual, não pagas
     const contasReceberPorRev = {};
+
+    // DEBUG: loga as primeiras 3 contas para entender a estrutura
+    console.log('CONTAS A RECEBER (primeiras 3):', JSON.stringify(contasReceber.slice(0,3), null, 2));
+
     contasReceber.forEach(cr => {
       // parcela pode ser array ou objeto único — normaliza para array
       const parcelas = cr.parcela
