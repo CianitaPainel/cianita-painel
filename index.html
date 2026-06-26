@@ -420,19 +420,6 @@ async function carregarDados() {
     const consultorAsAtivas = revendedoresAtivos.filter(r => r.fk_tipo_revendedor_id === 2);
     const todasConsultoras = revendedoresTodos.filter(r => r.fk_tipo_revendedor_id === 2);
 
-    // DEBUG: testa endpoint de usuários para buscar supervisionados
-    try {
-      const u = await apiFetch('/usuario');
-      console.log('USUARIOS:', JSON.stringify(u, null, 2));
-    } catch(e) {
-      console.log('ERRO usuario:', e.message);
-      try {
-        const u2 = await apiFetch('/user');
-        console.log('USER:', JSON.stringify(u2, null, 2));
-      } catch(e2) {
-        console.log('ERRO user:', e2.message);
-      }
-    }
 
     const hoje = new Date();
     const ano = hoje.getFullYear();
