@@ -669,67 +669,6 @@ function renderKanban() {
   });
 }
 
-  const kanban = document.getElementById('kanban');
-  kanban.innerHTML = '';
-
-  COLUNAS.forEach(col => {
-    const cards = filtradas.filter(c => coluna(c) === col.id);
-    const colEl = document.createElement('div');
-    colEl.className = 'col';
-    colEl.innerHTML = `
-      <div class="col-header">
-        <span class="col-title">${col.label}</span>
-        <span class="col-count" style="background:${col.countBg};color:${col.countClr}">${cards.length}</span>
-      </div>
-      <div class="col-hint">${col.hint}</div>
-      ${cards.length === 0 ? '<div class="empty-col">Nenhuma consultora</div>' : ''}
-    `;
-    cards.forEach(c => {
-      const bg = AVATAR_BG[c.id % AVATAR_BG.length];
-      const clr = AVATAR_CLR[c.id % AVATAR_CLR.length];
-      const nstyle = NIVEL_STYLE[c.nivel] || {bg:'#faece7',color:'#712b13'};
-      const sstyle = supColorMap[c.sup] || {bg:'#f5ede9',color:'#7a5c3a'};
-      const semKit = col.id === 'sem-mostruario';
-      const vendaSemKit = semKit && c.vendas > 0;
-      const temObs = (obsLocal[c.id] || []).length > 0;
-      const acoesPend = (acoesLocal[c.id] || []).filter(a => !a.done).length;
-      const acerto = fmtAcerto(c.dataAcerto);
-      const comContato = temContatoMes(c.id);
-
-      const card = document.createElement('div');
-      card.className = 'card';
-      if (semKit) card.style.borderColor = '#e8d0c0';
-      card.onclick = () => abrirModal(c.id);
-      card.innerHTML = `
-        <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
-          <div class="avatar" style="width:28px;height:28px;font-size:10px;background:${bg};color:${clr}">${initials(c.nome)}</div>
-          <span class="card-name">${c.nome}</span>
-        </div>
-        <div style="margin-bottom:5px;display:flex;align-items:center;gap:5px;flex-wrap:wrap">
-          <span style="background:${sstyle.bg};color:${sstyle.color};padding:1px 6px;border-radius:20px;font-size:10px;font-weight:600">${c.sup}</span>
-          ${acerto ? `<span class="acerto-chip ${acerto.cls}"><i class="ti ti-calendar" style="font-size:9px"></i>${acerto.label}</span>` : ''}
-        </div>
-        ${semKit && !vendaSemKit ? `<div class="card-alert card-alert-warn"><i class="ti ti-alert-triangle"></i> Kit não bipado</div>` : ''}
-        ${vendaSemKit ? `<div class="card-alert card-alert-danger"><i class="ti ti-alert-circle"></i> Vendas sem kit registrado</div>` : ''}
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:7px">
-          <span class="nivel-badge" style="background:${nstyle.bg};color:${nstyle.color}">${c.nivel.charAt(0)+c.nivel.slice(1).toLowerCase()}</span>
-          <div style="display:flex;align-items:center;gap:5px;flex-direction:column;align-items:flex-end">
-            <div style="display:flex;align-items:center;gap:5px">
-              ${comContato ? `<span style="font-size:10px;color:#3b6d11">✓</span>` : ''}
-              ${temObs && !comContato ? '<div class="obs-dot"></div>' : ''}
-              ${acoesPend > 0 ? `<span style="font-size:10px;color:#854f0b;font-weight:600">${acoesPend} ação</span>` : ''}
-              <span style="font-size:11px;font-weight:600;color:${c.vendas===0?'#a32d2d':c.vendas<500?'#854f0b':'#3b6d11'}">${fmtBRL(c.vendas)}</span>
-            </div>
-            ${c.comprasDiretas > 0 ? `<span style="font-size:10px;color:#b5906b">+ ${fmtBRL(c.comprasDiretas)} compras</span>` : ''}
-          </div>
-        </div>
-      `;
-      colEl.appendChild(card);
-    });
-    kanban.appendChild(colEl);
-  });
-}
-
 // DASHBOARD
 function renderDashboard() {
   if (!dashData) return;
