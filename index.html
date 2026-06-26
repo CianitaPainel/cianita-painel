@@ -438,7 +438,7 @@ async function carregarDados() {
         const val = parseFloat(p.valor_pre_baixa || 0);
         if (val > 0) vendasPorRev[rid] = (vendasPorRev[rid] || 0) + val;
       } else if (p.status === 'Baixado') {
-        const val = parseFloat(p.valor_total || 0);
+        const val = parseFloat(p.valor_final || p.valor_total || 0);
         if (val > 0) vendasPorRev[rid] = (vendasPorRev[rid] || 0) + val;
       }
     });
@@ -636,7 +636,7 @@ function renderDashboard() {
   pedidosBaixadosMes.forEach(p => {
     if (p.status !== 'Baixado') return;
     if (!dataNoMesAtual(p.data_baixa)) return;
-    const val = parseFloat(p.valor_total || 0);
+    const val = parseFloat(p.valor_final || p.valor_total || 0);
     if (val <= 0) return;
     const rid = p.fk_revendedor_id;
     const supNome = rid ? supManual[rid] : null;
@@ -862,7 +862,7 @@ function renderDashboard() {
   // --- DIAGNÓSTICO: dados brutos da API para comparação com Jueri ---
   const totalVendasBruto = vendasMes.reduce((a,v) => a + parseFloat(v.valor_final || v.valor_total||0), 0);
   const baixadosDoMes = pedidosBaixadosMes.filter(p => dataNoMesAtual(p.data_baixa));
-  const totalBaixadosBruto = baixadosDoMes.reduce((a,p) => a + parseFloat(p.valor_total||0), 0);
+  const totalBaixadosBruto = baixadosDoMes.reduce((a,p) => a + parseFloat(p.valor_final||p.valor_total||0), 0);
 
   const gridDiag = document.getElementById('grid-diagnostico');
   if (gridDiag) {
@@ -915,7 +915,7 @@ function renderDashboard() {
           <td><span style="font-size:10px;padding:1px 5px;border-radius:10px;background:#eaf3de;color:#3b6d11">${p.status}</span></td>
           <td>${fmtData(p.data_criacao)}</td>
           <td>${fmtData(p.data_baixa)}</td>
-          <td style="text-align:right;font-weight:600">${fmtBRL(p.valor_total||0)}</td>
+          <td style="text-align:right;font-weight:600">${fmtBRL(p.valor_final||p.valor_total||0)}</td>
         </tr>`;
       }).join('') || '<tr><td colspan="6" style="text-align:center;color:#bbb;padding:1.5rem">Nenhum baixado</td></tr>';
     }
