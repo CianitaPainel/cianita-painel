@@ -1094,8 +1094,13 @@ function fecharModal(e) {
   }
 }
 
-function recarregar() { consultoras = []; document.getElementById('kanban').innerHTML = ''; carregarDados(); }
-function recarregarDash() { carregarDados(); }
+function recarregar() {
+  consultoras = [];
+  document.getElementById('kanban').innerHTML = '';
+  fetch('/api/cache/clear', { method: 'POST', headers: { 'x-jueri-token': TOKEN } })
+    .finally(() => carregarDados());
+}
+function recarregarDash() { recarregar(); }
 
 function sair() {
   localStorage.removeItem('cianita_token');
