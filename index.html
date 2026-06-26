@@ -450,6 +450,27 @@ async function carregarDados() {
       selNivel.appendChild(o);
     });
 
+    // Contas a receber: somente vencidas até o fim do mês atual, não pagas
+    const contasReceberPorRev = {};
+    contasReceber.forEach(cr => {
+      if (!cr.parcela) return;
+      cr.parcela.forEach(p => {
+        if (p.valor_pago) return;
+        const venc = new Date(p.data_vencimento);
+        if (isNaN(venc)) return;
+        const fimMes = new Date(ano, hoje.getMonth() + 1, 0);
+        if (venc > fimMes) return;
+        const nomeContato = p.contato || '';
+        const rev = consultorAsAtivas.find(r => r.nome === nomeContato);
+        if (rev) {
+          if (!contasReceberPorRev[rev.id]) contasReceberPorRev[rev.id] = { total: 0, vencidos: 0 };
+          const val = parseFloat(p.valor_cobrado || 0);
+          contasReceberPorRev[rev.id].total += val;
+          if (venc < new Date()) contasReceberPorRev[rev.id].vencidos += val;
+        }
+      });
+    });
+
     // Monta consultoras ATIVAS para o Kanban
     consultoras = consultorAsAtivas.map(r => {
       const nome = r.nome || 'Consultora';
@@ -463,32 +484,8 @@ async function carregarDados() {
       return { id: r.id, nome, sup, vendas, comprasDiretas, temKit, nivel, telefone: r.telefone_1 || r.telefone_2 || '', dataAcerto, contasReceber: cr };
     });
 
-    // Dados para dashboard — passa TODAS as consultoras (ativas + inativas)
+    // Dados para dashboard
     dashData = { pedidosAbertos, pedidosMes, pedidosBaixadosMes, vendasMes, todasConsultoras, consultorAsAtivas };
-
-    // Contas a receber: somente vencidas até o fim do mês atual, não pagas
-    // Agrupa por revendedor (fk_revendedor_id via pedido vinculado)
-    const contasReceberPorRev = {};
-    contasReceber.forEach(cr => {
-      if (!cr.parcela) return;
-      cr.parcela.forEach(p => {
-        if (p.valor_pago) return; // já paga, ignora
-        const venc = new Date(p.data_vencimento);
-        if (isNaN(venc)) return;
-        // Somente vencimentos até o fim do mês atual
-        const fimMes = new Date(ano, hoje.getMonth() + 1, 0);
-        if (venc > fimMes) return;
-        // Tenta associar ao revendedor via nome do contato
-        const nomeContato = p.contato || '';
-        const rev = consultorAsAtivas.find(r => r.nome === nomeContato);
-        if (rev) {
-          if (!contasReceberPorRev[rev.id]) contasReceberPorRev[rev.id] = { total: 0, vencidos: 0 };
-          const val = parseFloat(p.valor_cobrado || 0);
-          contasReceberPorRev[rev.id].total += val;
-          if (venc < new Date()) contasReceberPorRev[rev.id].vencidos += val;
-        }
-      });
-    });
 
     document.getElementById('setup-wrap').style.display = 'none';
     document.getElementById('sidebar').style.display = 'flex';
