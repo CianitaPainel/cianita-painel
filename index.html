@@ -295,15 +295,60 @@ let TOKEN = '';
 let consultoras = [];
 let supColorMap = {};
 let dashData = null;
-let obsLocal = JSON.parse(localStorage.getItem('cianita_obs') || '{}');
-let acoesLocal = JSON.parse(localStorage.getItem('cianita_acoes') || '{}');
-let supManual = JSON.parse(localStorage.getItem('cianita_sup') || '{}');
+let obsLocal = {};
+let acoesLocal = {};
+let supManual = {};
 
 SUPERVISORAS.forEach((s,i) => { supColorMap[s.nome] = SUP_COLORS[i % SUP_COLORS.length]; });
 
-function salvarObsStorage() { localStorage.setItem('cianita_obs', JSON.stringify(obsLocal)); }
-function salvarAcoesStorage() { localStorage.setItem('cianita_acoes', JSON.stringify(acoesLocal)); }
-function salvarSupManual() { localStorage.setItem('cianita_sup', JSON.stringify(supManual)); }
+function salvarObsStorage() { salvarNoServidor({ obs: obsLocal }); }
+function salvarAcoesStorage() { salvarNoServidor({ acoes: acoesLocal }); }
+function salvarSupManual() { salvarNoServidor({ supervisoras: supManual }); }
+
+async function salvarNoServidor(dados) {
+  try {
+    await fetch('/api/dados', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados)
+    });
+  } catch(e) { console.error('Erro ao salvar:', e); }
+}
+
+async function carregarDadosLocais() {
+  try {
+    const r = await fetch('/api/dados');
+    const d = await r.json();
+    obsLocal = d.obs || {};
+    acoesLocal = d.acoes || {};
+    supManual = d.supervisoras || {};
+  } catch(e) {
+    obsLocal = {}; acoesLocal = {}; supManual = {};
+  }
+}
+
+// Polling: sincroniza dados compartilhados a cada 30 segundos
+let _ultimaVersao = '';
+async function sincronizarDados() {
+  try {
+    const r = await fetch('/api/dados');
+    const d = await r.json();
+    const versao = JSON.stringify(d);
+    if (versao !== _ultimaVersao) {
+      _ultimaVersao = versao;
+      obsLocal = d.obs || {};
+      acoesLocal = d.acoes || {};
+      const supAnterior = JSON.stringify(supManual);
+      supManual = d.supervisoras || {};
+      // Se supervisoras mudaram, atualiza consultoras e re-renderiza
+      if (JSON.stringify(supManual) !== supAnterior && consultoras.length > 0) {
+        consultoras.forEach(c => { c.sup = supManual[c.id] || 'Sem supervisora'; });
+      }
+      if (consultoras.length > 0) renderKanban();
+    }
+  } catch(e) {}
+}
+setInterval(sincronizarDados, 30000);
 
 function setStatus(msg, tipo) {
   const el = document.getElementById('status-bar');
@@ -354,6 +399,7 @@ async function iniciarCarregamento() {
   localStorage.setItem('cianita_token', TOKEN);
   setStatus('<i class="ti ti-loader"></i> Conectando...', 'loading');
   try {
+    await carregarDadosLocais();
     await apiFetch('/status');
     await carregarDados();
   } catch(e) {
