@@ -8,7 +8,7 @@ const JUERI_BASE = 'https://jueri.com.br/sis/api/v1';
 const CACHE_TTL = 5 * 60 * 1000;
 
 const UPSTASH_URL = 'https://pure-boa-106896.upstash.io';
-const UPSTASH_TOKEN = 'gQAAAAAAaGQAAIgcDEzODA1YTQwOTlmOTA0NDllOTdkODE4ZjU1NzcxNjhiMQ';
+const UPSTASH_TOKEN = 'gQAAAAAAAaGQAAIgcDEzODA1YTQwOTlmOTA0NDllOTdkODE4ZjU1NzcxNjhiMQ';
 
 // Cache em memória para o Jueri
 const cache = {};
