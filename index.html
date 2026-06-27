@@ -417,8 +417,9 @@ async function carregarDados() {
       buscarTodas('/revendedor')
     ]);
 
-    const consultorAsAtivas = revendedoresAtivos.filter(r => r.fk_tipo_revendedor_id === 2);
-    const todasConsultoras = revendedoresTodos.filter(r => r.fk_tipo_revendedor_id === 2);
+    // Consultoras = todos exceto tipo 1 (gerente/lider)
+    const consultorAsAtivas = revendedoresAtivos.filter(r => r.fk_tipo_revendedor_id !== 1);
+    const todasConsultoras = revendedoresTodos.filter(r => r.fk_tipo_revendedor_id !== 1);
 
 
     const hoje = new Date();
@@ -634,7 +635,8 @@ function temContatoNaData(id, dataStr) {
 function renderKanban() {
   const sup = document.getElementById('filtro-sup').value;
   const niv = document.getElementById('filtro-nivel').value;
-  const busca = document.getElementById('busca-nome').value.toLowerCase().trim();
+  const busca = document.getElementById('busca-nome').value.toLowerCase().trim()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const contato = document.getElementById('filtro-contato').value;
   const dataContato = document.getElementById('filtro-data-contato').value;
 
@@ -642,7 +644,7 @@ function renderKanban() {
     if (sup === 'sem' && c.sup !== 'Sem supervisora') return false;
     if (sup !== 'todas' && sup !== 'sem' && c.sup !== sup) return false;
     if (niv !== 'todos' && c.nivel !== niv) return false;
-    if (busca && !c.nome.toLowerCase().includes(busca)) return false;
+    if (busca && !c.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(busca)) return false;
     if (dataContato) {
       if (!temContatoNaData(c.id, dataContato)) return false;
     } else {
@@ -967,9 +969,18 @@ function abrirModalSupervisoras() {
 
   let html = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid #f0e4df">
-      <div><div class="sup-title">Atribuição de Supervisoras</div><div class="sup-sub">Salvo automaticamente no navegador de cada usuária.</div></div>
+      <div><div class="sup-title">Atribuição de Supervisoras</div></div>
       <button class="btn" onclick="fecharModalSup()" style="padding:5px 8px"><i class="ti ti-x"></i></button>
-    </div>`;
+    </div>
+
+    <!-- ABAS -->
+    <div style="display:flex;gap:4px;margin-bottom:1rem;background:#f9f1ee;border-radius:10px;padding:3px">
+      <button id="aba-individual" onclick="trocarAbaSupModal('individual')" style="flex:1;padding:7px;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;background:#fff;color:#b5906b">Individual</button>
+      <button id="aba-lote" onclick="trocarAbaSupModal('lote')" style="flex:1;padding:7px;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;background:transparent;color:#888">Em lote</button>
+    </div>
+
+    <!-- ABA INDIVIDUAL -->
+    <div id="sup-individual">`;
 
   if (semSup.length > 0) {
     html += `<div style="font-size:11px;font-weight:600;color:#a32d2d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Sem supervisora (${semSup.length})</div>`;
@@ -995,8 +1006,75 @@ function abrirModalSupervisoras() {
     });
   }
 
+  html += `</div>
+
+    <!-- ABA EM LOTE -->
+    <div id="sup-lote" style="display:none">
+      <div style="font-size:12px;color:#888;margin-bottom:12px;line-height:1.6">
+        Cole os nomes das consultoras abaixo, um por linha, e escolha a supervisora. O sistema busca automaticamente pelo nome.
+      </div>
+      <div style="margin-bottom:10px">
+        <label style="font-size:11px;color:#b5906b;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px">Supervisora</label>
+        <select id="lote-sup-select" style="width:100%;padding:8px;border-radius:8px;border:1px solid #e8d8d0;font-size:13px">
+          ${SUPERVISORAS.map(s => `<option value="${s.nome}">${s.nome}</option>`).join('')}
+        </select>
+      </div>
+      <div style="margin-bottom:10px">
+        <label style="font-size:11px;color:#b5906b;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px">Nomes (um por linha)</label>
+        <textarea id="lote-nomes" style="min-height:180px;font-size:12px" placeholder="Cole os nomes aqui, um por linha..."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="aplicarLote()"><i class="ti ti-check"></i> Aplicar atribuição</button>
+      </div>
+      <div id="lote-resultado" style="margin-top:12px;font-size:12px;line-height:1.6"></div>
+    </div>`;
+
   modal.innerHTML = html;
   document.getElementById('overlay-sup').classList.add('open');
+}
+
+function trocarAbaSupModal(aba) {
+  document.getElementById('sup-individual').style.display = aba === 'individual' ? 'block' : 'none';
+  document.getElementById('sup-lote').style.display = aba === 'lote' ? 'block' : 'none';
+  document.getElementById('aba-individual').style.background = aba === 'individual' ? '#fff' : 'transparent';
+  document.getElementById('aba-individual').style.color = aba === 'individual' ? '#b5906b' : '#888';
+  document.getElementById('aba-lote').style.background = aba === 'lote' ? '#fff' : 'transparent';
+  document.getElementById('aba-lote').style.color = aba === 'lote' ? '#b5906b' : '#888';
+}
+
+function normalizar(s) {
+  return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
+function aplicarLote() {
+  const sup = document.getElementById('lote-sup-select').value;
+  const texto = document.getElementById('lote-nomes').value;
+  const nomes = texto.split('\n').map(n => n.trim()).filter(Boolean);
+  const resultado = document.getElementById('lote-resultado');
+
+  let encontrados = 0, naoEncontrados = [];
+
+  nomes.forEach(nome => {
+    const c = consultoras.find(c => normalizar(c.nome) === normalizar(nome));
+    if (c) {
+      supManual[c.id] = sup;
+      c.sup = sup;
+      encontrados++;
+    } else {
+      naoEncontrados.push(nome);
+    }
+  });
+
+  if (encontrados > 0) salvarSupManual();
+  renderKanban();
+
+  let html = `<div style="color:#3b6d11;margin-bottom:6px"><i class="ti ti-check"></i> <strong>${encontrados}</strong> consultora(s) atribuídas a ${sup}</div>`;
+  if (naoEncontrados.length > 0) {
+    html += `<div style="color:#a32d2d;margin-bottom:4px"><i class="ti ti-alert-triangle"></i> <strong>${naoEncontrados.length}</strong> nome(s) não encontrado(s):</div>`;
+    html += naoEncontrados.map(n => `<div style="color:#a32d2d;padding-left:12px">· ${n}</div>`).join('');
+  }
+  resultado.innerHTML = html;
+  document.getElementById('lote-nomes').value = '';
 }
 
 function atribuirSupervisora(id, sup) {
