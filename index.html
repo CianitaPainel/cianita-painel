@@ -189,6 +189,14 @@ textarea:focus{outline:none;border-color:#b5906b}
         <option value="sem">Sem contato no mês</option>
       </select>
       <input type="date" id="filtro-data-contato" onchange="renderKanban()" style="padding:6px 10px;border-radius:8px;border:1px solid #e8d8d0;background:#fff;color:#1a1a1a;font-size:12px" title="Filtrar por data de contato">
+      <select id="ordenacao" onchange="renderKanban()">
+        <option value="acerto-asc">Acerto ↑ (mais próximo)</option>
+        <option value="acerto-desc">Acerto ↓ (mais distante)</option>
+        <option value="receber-desc">A receber ↓ (maior)</option>
+        <option value="receber-asc">A receber ↑ (menor)</option>
+        <option value="contato-sem">Sem contato primeiro</option>
+        <option value="contato-com">Com contato primeiro</option>
+      </select>
       <button class="btn btn-sup" onclick="abrirModalSupervisoras()"><i class="ti ti-users"></i> Supervisoras</button>
       <button class="btn" onclick="recarregar()"><i class="ti ti-refresh"></i> Atualizar</button>
     </div>
@@ -644,6 +652,7 @@ function renderKanban() {
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const contato = document.getElementById('filtro-contato').value;
   const dataContato = document.getElementById('filtro-data-contato').value;
+  const ordenacao = document.getElementById('ordenacao').value;
 
   const filtradas = consultoras.filter(c => {
     if (sup === 'sem' && c.sup !== 'Sem supervisora') return false;
@@ -658,6 +667,44 @@ function renderKanban() {
       if (contato === 'sem' && temContatoMes(c.id)) return false;
     }
     return true;
+  });
+
+  // Ordenação dentro de cada coluna
+  const BIG = 99999999999;
+  filtradas.sort((a, b) => {
+    switch(ordenacao) {
+      case 'acerto-asc': {
+        const da = a.dataAcerto ? new Date(a.dataAcerto).getTime() : BIG;
+        const db = b.dataAcerto ? new Date(b.dataAcerto).getTime() : BIG;
+        return da - db;
+      }
+      case 'acerto-desc': {
+        const da = a.dataAcerto ? new Date(a.dataAcerto).getTime() : -1;
+        const db = b.dataAcerto ? new Date(b.dataAcerto).getTime() : -1;
+        return db - da;
+      }
+      case 'receber-desc': {
+        const va = a.contasReceber ? a.contasReceber.total : 0;
+        const vb = b.contasReceber ? b.contasReceber.total : 0;
+        return vb - va;
+      }
+      case 'receber-asc': {
+        const va = a.contasReceber ? a.contasReceber.total : BIG;
+        const vb = b.contasReceber ? b.contasReceber.total : BIG;
+        return va - vb;
+      }
+      case 'contato-sem': {
+        const ca = temContatoMes(a.id) ? 1 : 0;
+        const cb = temContatoMes(b.id) ? 1 : 0;
+        return ca - cb;
+      }
+      case 'contato-com': {
+        const ca = temContatoMes(a.id) ? 0 : 1;
+        const cb = temContatoMes(b.id) ? 0 : 1;
+        return ca - cb;
+      }
+      default: return 0;
+    }
   });
 
   const kanban = document.getElementById('kanban');
