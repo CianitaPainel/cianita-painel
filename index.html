@@ -417,9 +417,14 @@ async function carregarDados() {
       buscarTodas('/revendedor')
     ]);
 
-    // Consultoras = todos exceto tipo 1 (gerente/lider)
-    const consultorAsAtivas = revendedoresAtivos.filter(r => r.fk_tipo_revendedor_id !== 1);
-    const todasConsultoras = revendedoresTodos.filter(r => r.fk_tipo_revendedor_id !== 1);
+    // Consultoras = todos exceto tipo 1 (gerente/lider), EXCETO exceções conhecidas
+    const EXCECOES_INCLUIR = ['Márnia Thais Guimarães Figueiredo'];
+    const consultorAsAtivas = revendedoresAtivos.filter(r =>
+      r.fk_tipo_revendedor_id !== 1 || EXCECOES_INCLUIR.includes(r.nome)
+    );
+    const todasConsultoras = revendedoresTodos.filter(r =>
+      r.fk_tipo_revendedor_id !== 1 || EXCECOES_INCLUIR.includes(r.nome)
+    );
 
 
     const hoje = new Date();
